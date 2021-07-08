@@ -84,7 +84,7 @@
     }else{
         [CXAlertControllerUtils showAlertWithConfigBlock:^(CXAlertControllerConfigModel *config) {
             config.title = [NSString stringWithFormat:@"您最多只能选择 %@ 张照片", @(self.assetsPickerController.enableMaximumCount)];
-            config.window = self.view.window;
+            config.viewController = self.assetsPickerController.visibleViewController;
         } completion:nil];
     }
     
