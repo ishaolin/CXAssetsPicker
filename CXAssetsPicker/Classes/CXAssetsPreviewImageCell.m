@@ -43,7 +43,7 @@
         }
         
         if([info[PHImageResultIsDegradedKey] boolValue] || [info[PHImageResultIsInCloudKey] boolValue]){
-            PHImageRequestOptions *options = [PHImageRequestOptions cx_options];
+            PHImageRequestOptions *options = [PHImageRequestOptions cx_optionsForOriginal:NO];
             self.hideProgressBar = NO;
             
             options.progressHandler = ^(double progress, NSError * _Nullable error, BOOL * _Nonnull stop, NSDictionary * _Nullable info) {

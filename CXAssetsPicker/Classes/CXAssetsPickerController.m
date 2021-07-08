@@ -25,7 +25,7 @@
         _enablePreview = YES;
         _multiSelectionMode = YES;
         
-        _toolbarItemBackgroundColor = CXHexIColor(0x00B7FF);
+        _toolbarItemBackgroundColor = CXHexIColor(0x26AB28);
         _toolbarItemFontColor = [UIColor whiteColor];
         _toolbarSendItemText = @"确定";
     }
@@ -36,8 +36,7 @@
 - (NSArray<PHAsset *> *)selectedAssets{
     UIViewController *viewController = self.viewControllers.firstObject;
     if([viewController isKindOfClass:[CXAssetsGroupViewController class]]){
-        CXAssetsGroupViewController *assetsGroupViewController = (CXAssetsGroupViewController *)viewController;
-        return assetsGroupViewController.selectedAssets;
+        return ((CXAssetsGroupViewController *)viewController).selectedAssets;
     }
     
     return nil;

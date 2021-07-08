@@ -7,7 +7,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface CXAssetsToolBarButtonItem : UIButton
+@interface CXControlHighlightedButton : UIButton
 
 @property (nonatomic, assign) NSUInteger barButtonItemFontSize;
 @property (nonatomic, copy) NSString *barButtonItemTitle;
@@ -15,5 +15,9 @@
 @property (nonatomic, assign, getter = isEnableHighlighted) BOOL enableHighlighted;
 
 - (void)addTarget:(id)target action:(SEL)action;
+
+@end
+
+@interface CXAssetsToolBarButtonItem : CXControlHighlightedButton
 
 @end

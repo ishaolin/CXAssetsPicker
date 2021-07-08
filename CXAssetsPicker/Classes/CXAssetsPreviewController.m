@@ -73,6 +73,8 @@
         _toolBar.barButtonItemBackgroundColor = toolbarItemBackgroundColor;
         _toolBar.barButtonItemFontColor = toolbarItemFontColor;
         _toolBar.sendBarButtonItemText = self.assetsPickerController.toolbarSendItemText;
+        _toolBar.selectedOriginalImage = self.isSelectedOriginalImage;
+        
         CGFloat toolBar_H = CGRectGetHeight(_toolBar.frame);
         CGFloat toolBar_X = 0;
         CGFloat toolBar_W = CGRectGetWidth(self.view.bounds);
@@ -90,9 +92,9 @@
     }
 }
 
-- (void)setSeletedCount:(NSInteger)seletedCount{
-    _seletedCount = seletedCount;
-    _toolBar.selectedCount = seletedCount;
+- (void)setSelectedCount:(NSInteger)selectedCount{
+    _selectedCount = selectedCount;
+    _toolBar.selectedCount = selectedCount;
     
     if(_currentAssetIndex < self.assets.count){
         PHAsset *asset = self.assets[_currentAssetIndex];
@@ -103,7 +105,7 @@
 - (void)handleActionButton:(CXAssetsToolBarButtonItem *)barButtonItem{
     if(!barButtonItem.isSelected &&
        self.assetsPickerController.enableMaximumCount > 0 &&
-       _seletedCount == self.assetsPickerController.enableMaximumCount){
+       _selectedCount == self.assetsPickerController.enableMaximumCount){
         if([self.assetsPickerController.delegate respondsToSelector:@selector(assetsPickerController:didSelectCountReachedEnableMaximumCount:)]){
             [self.assetsPickerController.delegate assetsPickerController:self.assetsPickerController didSelectCountReachedEnableMaximumCount:self.assetsPickerController.enableMaximumCount];
         }
@@ -130,6 +132,13 @@
 - (void)assetsViewToolBarDidCompleted:(CXAssetsViewToolBar *)assetsViewToolBar{
     if([self.delegate respondsToSelector:@selector(assetsPreviewControllerDidCompleted:)]){
         [self.delegate assetsPreviewControllerDidCompleted:self];
+    }
+}
+
+- (void)assetsViewToolBar:(CXAssetsViewToolBar *)assetsViewToolBar didSelectedOriginalImage:(BOOL)isSelected{
+    self.selectedOriginalImage = isSelected;
+    if([self.delegate respondsToSelector:@selector(assetsPreviewController:didSelectedOriginalImage:)]){
+        [self.delegate assetsPreviewController:self didSelectedOriginalImage:isSelected];
     }
 }
 

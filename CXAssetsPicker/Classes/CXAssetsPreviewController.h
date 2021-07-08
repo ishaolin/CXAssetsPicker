@@ -17,14 +17,17 @@
 
 - (void)assetsPreviewController:(CXAssetsPreviewController *)assetsPreviewController didSelectAsset:(PHAsset *)asset;
 - (void)assetsPreviewControllerDidCompleted:(CXAssetsPreviewController *)assetsPreviewController;
+- (void)assetsPreviewController:(CXAssetsPreviewController *)assetsPreviewController
+       didSelectedOriginalImage:(BOOL)isSelected;
 
 @end
 
 @interface CXAssetsPreviewController : CXAssetsBaseViewController
 
-@property (nonatomic, strong) NSArray<PHAsset *> *assets;
+@property (nonatomic, copy) NSArray<PHAsset *> *assets;
 @property (nonatomic, assign) NSUInteger currentAssetIndex;
 @property (nonatomic, weak) id<CXAssetsPreviewControllerDelegate> delegate;
-@property (nonatomic, assign) NSInteger seletedCount;
+@property (nonatomic, assign) NSInteger selectedCount;
+@property (nonatomic, assign, getter = isSelectedOriginalImage) BOOL selectedOriginalImage;
 
 @end

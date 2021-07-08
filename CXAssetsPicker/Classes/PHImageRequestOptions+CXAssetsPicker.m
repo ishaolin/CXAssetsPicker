@@ -6,14 +6,18 @@
 //
 
 #import "PHImageRequestOptions+CXAssetsPicker.h"
+#import "PHAsset+CXExtensions.h"
 
 @implementation PHImageRequestOptions (CXAssetsPicker)
 
-+ (instancetype)cx_options{
++ (instancetype)cx_optionsForOriginal:(BOOL)original{
     PHImageRequestOptions *options = [[self alloc] init];
-    options.version = PHImageRequestOptionsVersionOriginal;
-    options.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
-    options.resizeMode = PHImageRequestOptionsResizeModeNone;
+    if(original){
+        options.version = PHImageRequestOptionsVersionOriginal;
+        options.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
+        options.resizeMode = PHImageRequestOptionsResizeModeNone;
+    }
+    
     options.networkAccessAllowed = YES;
     return options;
 }

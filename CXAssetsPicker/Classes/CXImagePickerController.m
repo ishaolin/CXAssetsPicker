@@ -245,9 +245,9 @@
 }
 
 - (void)assetsPickerController:(CXAssetsPickerController *)assetsPickerController didFinishPickingAssets:(NSArray<PHAsset *> *)assets assetsType:(CXAssetsType)assetsType{
-    PHImageRequestOptions *options = [PHImageRequestOptions cx_options];
+    PHImageRequestOptions *options = [PHImageRequestOptions cx_optionsForOriginal:YES];
     [CXHUD showHUD];
-    [CXAssetsImageManager requestImageDataForAsset:assets.lastObject options:options completion:^(PHAsset *asset, CXAssetsElementImage *image) {
+    [CXAssetsImageManager requestImageDataForAsset:assets.firstObject options:options completion:^(PHAsset *asset, CXAssetsElementImage *image) {
         [CXHUD dismiss];
         if(!image.image){
             return;

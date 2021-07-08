@@ -9,6 +9,6 @@
 
 @interface PHImageRequestOptions (CXAssetsPicker)
 
-+ (instancetype)cx_options;
++ (instancetype)cx_optionsForOriginal:(BOOL)original;
 
 @end

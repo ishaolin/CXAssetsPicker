@@ -5,12 +5,8 @@
 //  Created by wshaolin on 15/7/9.
 //
 
-#import "CXAssetsBaseViewController.h"
+#import "CXAssetsDelegateViewController.h"
 
-@class PHAsset;
-
-@interface CXAssetsGroupViewController : CXAssetsBaseViewController
-
-@property (nonatomic, strong, readonly) NSArray<PHAsset *> *selectedAssets;
+@interface CXAssetsGroupViewController : CXAssetsDelegateViewController
 
 @end

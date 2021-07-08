@@ -8,13 +8,7 @@
 #import "CXAssetsToolBarButtonItem.h"
 #import <CXUIKit/CXUIKit.h>
 
-@interface CXAssetsToolBarButtonItem () {
-    CAKeyframeAnimation *_animation;
-}
-
-@end
-
-@implementation CXAssetsToolBarButtonItem
+@implementation CXControlHighlightedButton
 
 - (instancetype)initWithFrame:(CGRect)frame{
     if(self = [super initWithFrame:frame]){
@@ -22,7 +16,6 @@
         [self setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         self.titleLabel.textAlignment = NSTextAlignmentCenter;
         
-        self.backgroundColor = CXHexIColor(0x1AB20A);
         self.enableHighlighted = YES;
     }
     
@@ -50,7 +43,7 @@
         self.alpha = 1.0;
     }
     
-    if(self.enableHighlighted){
+    if(self.isEnableHighlighted){
         [super setHighlighted:highlighted];
     }
 }
@@ -63,6 +56,24 @@
     }
     
     [super setEnabled:enabled];
+}
+
+@end
+
+@interface CXAssetsToolBarButtonItem () {
+    CAKeyframeAnimation *_animation;
+}
+
+@end
+
+@implementation CXAssetsToolBarButtonItem
+
+- (instancetype)initWithFrame:(CGRect)frame{
+    if(self = [super initWithFrame:frame]){
+        self.backgroundColor = CXHexIColor(0x26AB28);
+    }
+    
+    return self;
 }
 
 - (void)setSelected:(BOOL)selected{

@@ -8,12 +8,14 @@
 #import "CXAssetsViewToolBar.h"
 #import "CXAssetsToolBarButtonItem.h"
 #import <CXUIKit/CXUIKit.h>
+#import "CXAssetsPickerDefines.h"
 
 @interface CXAssetsViewToolBar(){
     UIToolbar *_contentView;
     
-    CXAssetsToolBarButtonItem *_previewItem;
-    CXAssetsToolBarButtonItem *_completeItem;
+    CXControlHighlightedButton *_previewItem;
+    CXControlHighlightedButton *_completeItem;
+    CXControlHighlightedButton *_originalItem;
 }
 
 @end
@@ -35,8 +37,20 @@
         [_completeItem addTarget:self action:@selector(didClickCompleteBarButtonItem:)];
         _completeItem.enabled = NO;
         
+        _originalItem = [CXControlHighlightedButton buttonWithType:UIButtonTypeCustom];
+        _originalItem.barButtonItemTitle = NSLocalizedString(@"原图", nil);
+        _originalItem.backgroundColor = [UIColor clearColor];
+        _originalItem.enableHighlighted = NO;
+        [_originalItem setImage:[CX_ASSETS_PICKER_IMAGE(@"assets_picker_image_selected_0") cx_imageForTintColor:CXHexIColor(0x26AB28)] forState:UIControlStateNormal];
+        [_originalItem setImage:CX_ASSETS_PICKER_IMAGE(@"assets_original_image_selected_1") forState:UIControlStateSelected];
+        _originalItem.barButtonItemFontSize = 17;
+        _originalItem.titleEdgeInsets = UIEdgeInsetsMake(0, 5.0, 0, 0);
+        [_originalItem setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
+        [_originalItem addTarget:self action:@selector(didClickOriginalBarButtonItem:)];
+        
         [self addSubview:_previewItem];
         [self addSubview:_completeItem];
+        [self addSubview:_originalItem];
     }
     
     return self;
@@ -69,6 +83,11 @@
     _previewItem.hidden = hiddenPreviewItem;
 }
 
+- (void)setSelectedOriginalImage:(BOOL)selectedOriginalImage{
+    _selectedOriginalImage = selectedOriginalImage;
+    _originalItem.selected = _selectedOriginalImage;
+}
+
 - (void)setTranslucent:(BOOL)translucent{
     _translucent = translucent;
     _contentView.translucent = _translucent;
@@ -89,6 +108,13 @@
 - (void)didClickCompleteBarButtonItem:(CXAssetsToolBarButtonItem *)barButtonItem{
     if([self.delegate respondsToSelector:@selector(assetsViewToolBarDidCompleted:)]){
         [self.delegate assetsViewToolBarDidCompleted:self];
+    }
+}
+
+- (void)didClickOriginalBarButtonItem:(CXAssetsToolBarButtonItem *)barButtonItem{
+    self.selectedOriginalImage = !self.isSelectedOriginalImage;
+    if([self.delegate respondsToSelector:@selector(assetsViewToolBar:didSelectedOriginalImage:)]){
+        [self.delegate assetsViewToolBar:self didSelectedOriginalImage:self.isSelectedOriginalImage];
     }
 }
 
@@ -120,6 +146,12 @@
     
     CGFloat completeItem_X = self.bounds.size.width - completeItem_W - item_M;
     _completeItem.frame = CGRectMake(completeItem_X, completeItem_Y, completeItem_W, completeItem_H);
+    
+    CGFloat originalItem_H = previewItem_H;
+    CGFloat originalItem_W = 70.0;
+    CGFloat originalItem_Y = previewItem_Y;
+    CGFloat originalItem_X = (CGRectGetWidth(self.bounds) - originalItem_W) * 0.5;
+    _originalItem.frame = CGRectMake(originalItem_X, originalItem_Y, originalItem_W, originalItem_H);
 }
 
 - (void)setEnableMaximumCount:(NSInteger)enableMaximumCount{

@@ -37,7 +37,7 @@ static UIColor *_selectedAssetFontColor = nil;
         _displayImageView.contentMode = UIViewContentModeScaleAspectFill;
         
         _selectedMask = [[UIView alloc] init];
-        _selectedMask.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.4];
+        _selectedMask.backgroundColor = [UIColor colorWithWhite:0 alpha:0.5];
         _selectedMask.hidden = YES;
         
         _selectButton = [CXAssetsToolBarButtonItem buttonWithType:UIButtonTypeCustom];

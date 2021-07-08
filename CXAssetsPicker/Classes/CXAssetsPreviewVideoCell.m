@@ -41,10 +41,8 @@
     [asset cx_thumbnailWithSize:CGSizeMake(asset.pixelWidth / scale, asset.pixelHeight / scale) completion:^(UIImage *image, NSDictionary<NSString *,id> *info) {
         if(image){
             self->_videoPlayer.snapshotView.image = image;
-        }
-        
-        if([info[PHImageResultIsDegradedKey] boolValue] || [info[PHImageResultIsInCloudKey] boolValue]){
-            PHImageRequestOptions *options = [PHImageRequestOptions cx_options];
+        }else if([info[PHImageResultIsDegradedKey] boolValue] || [info[PHImageResultIsInCloudKey] boolValue]){
+            PHImageRequestOptions *options = [PHImageRequestOptions cx_optionsForOriginal:NO];
             [CXAssetsImageManager requestImageDataForAsset:asset options:options completion:^(PHAsset *asset, CXAssetsElementImage *image) {
                 if(self.asset != asset){
                     return;

@@ -89,7 +89,7 @@
 
 + (void)requestImageDataForAssets:(NSArray<PHAsset *> *)assets
                        completion:(void(^)(NSArray<CXAssetsElementImage *> *images))completion{
-    PHImageRequestOptions *options = [PHImageRequestOptions cx_options];
+    PHImageRequestOptions *options = [PHImageRequestOptions cx_optionsForOriginal:assets.firstObject.cx_originalImage];
     [self requestImageDataForAssets:assets options:options completion:completion];
 }
 

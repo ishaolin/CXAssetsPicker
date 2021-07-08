@@ -15,6 +15,7 @@
 
 - (void)assetsViewToolBarDidCompleted:(CXAssetsViewToolBar *)assetsViewToolBar;
 - (void)assetsViewToolBarDidPreviewed:(CXAssetsViewToolBar *)assetsViewToolBar;
+- (void)assetsViewToolBar:(CXAssetsViewToolBar *)assetsViewToolBar didSelectedOriginalImage:(BOOL)isSelected;;
 
 @end
 
@@ -25,7 +26,7 @@
 @property (nonatomic, assign) NSInteger selectedCount;
 @property (nonatomic, assign) NSInteger enableMaximumCount;
 @property (nonatomic, assign, getter = isHiddenPreviewItem) BOOL hiddenPreviewItem;
-
+@property (nonatomic, assign, getter = isSelectedOriginalImage) BOOL selectedOriginalImage;
 @property (nonatomic, assign, getter = isTranslucent) BOOL translucent;
 
 @property (nonatomic, strong) UIColor *barButtonItemBackgroundColor;

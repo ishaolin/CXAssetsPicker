@@ -17,8 +17,6 @@
     UIView *_noDataView;
 }
 
-@property (nonatomic, weak) CXAssetsViewController *currentAssetsViewController;
-
 @end
 
 @implementation CXAssetsGroupViewController
@@ -79,11 +77,7 @@
 }
 
 - (void)didClickCancelBarButtonItem:(CXBarButtonItem *)barButtonItem{
-    if([self.assetsPickerController.delegate respondsToSelector:@selector(assetsPickerControllerDidCancel:)]){
-        [self.assetsPickerController.delegate assetsPickerControllerDidCancel:self.assetsPickerController];
-    }
-    
-    [self.assetsPickerController dismissViewControllerAnimated:YES completion:NULL];
+    [self pickerCancel];
 }
 
 - (void)loadAssetsGroups{
@@ -111,8 +105,8 @@
                 if(self->_assetsGroups.firstObject){
                     CXAssetsViewController *VC = [[CXAssetsViewController alloc] init];
                     [VC setAssetsGroup:self->_assetsGroups.firstObject];
+                    VC.delegate = self;
                     [self.navigationController pushViewController:VC animated:NO];
-                    self.currentAssetsViewController = VC;
                 }
             }else{
                 NSString *bundleDisplayName = [NSBundle mainBundle].cx_appName;
@@ -139,18 +133,14 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    CXAssetsViewController *assetsViewController = [[CXAssetsViewController alloc] init];
-    [assetsViewController setAssetsGroup:_assetsGroups[indexPath.row]];
-    [self.navigationController pushViewController:assetsViewController animated:YES];
-    self.currentAssetsViewController = assetsViewController;
+    CXAssetsViewController *VC = [[CXAssetsViewController alloc] init];
+    [VC setAssetsGroup:_assetsGroups[indexPath.row]];
+    VC.delegate = self;
+    [self.navigationController pushViewController:VC animated:YES];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     return 85.0;
-}
-
-- (NSArray<PHAsset *> *)selectedAssets{
-    return self.currentAssetsViewController.selectedAssets;
 }
 
 - (void)reloadData{

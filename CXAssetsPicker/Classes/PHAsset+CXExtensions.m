@@ -34,6 +34,14 @@
     return [objc_getAssociatedObject(self, _cmd) unsignedIntegerValue];
 }
 
+- (void)setCx_originalImage:(BOOL)cx_originalImage{
+    objc_setAssociatedObject(self, @selector(cx_originalImage), @(cx_originalImage), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (BOOL)cx_originalImage{
+    return [objc_getAssociatedObject(self, _cmd) boolValue];
+}
+
 - (void)cx_thumbnailWithSize:(CGSize)size completion:(CXAssetThumbnailBlock)completion{
     [CXAssetsImageManager requestImageForAsset:self targetSize:size contentMode:PHImageContentModeDefault options:nil completion:^(PHAsset *asset, UIImage *image, NSDictionary<NSString *,id> *info) {
         if(asset != self){
