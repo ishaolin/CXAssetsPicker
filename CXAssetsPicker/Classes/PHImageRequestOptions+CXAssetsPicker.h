@@ -1,0 +1,14 @@
+//
+//  PHImageRequestOptions+CXAssetsPicker.h
+//  CXAssetsPicker
+//
+//  Created by wshaolin on 2021/7/6.
+//
+
+#import <Photos/Photos.h>
+
+@interface PHImageRequestOptions (CXAssetsPicker)
+
++ (instancetype)cx_options;
+
+@end
