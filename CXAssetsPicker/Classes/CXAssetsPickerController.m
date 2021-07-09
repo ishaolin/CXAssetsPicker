@@ -36,7 +36,7 @@
 - (NSArray<PHAsset *> *)selectedAssets{
     UIViewController *viewController = self.viewControllers.firstObject;
     if([viewController isKindOfClass:[CXAssetsGroupViewController class]]){
-        return ((CXAssetsGroupViewController *)viewController).selectedAssets;
+        return [((CXAssetsGroupViewController *)viewController).selectedAssets copy];
     }
     
     return nil;
