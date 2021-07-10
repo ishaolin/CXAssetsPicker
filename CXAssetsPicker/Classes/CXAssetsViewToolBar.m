@@ -139,7 +139,9 @@
     
     CGFloat completeItem_H = previewItem_H;
     CGFloat completeItem_Y = previewItem_Y;
-    CGFloat completeItem_W = [_completeItem.barButtonItemTitle boundingRectWithSize:CGSizeMake(previewItem_W * 2, completeItem_H) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName : _completeItem.titleLabel.font} context:nil].size.width + item_M * 2;
+    CGFloat completeItem_W = [CXStringBounding bounding:_completeItem.barButtonItemTitle
+                                           rectWithSize:CGSizeMake(previewItem_W * 2, completeItem_H)
+                                                   font:_completeItem.titleLabel.font].size.width + item_M * 2;
     if(completeItem_W < previewItem_W){
         completeItem_W = previewItem_W;
     }

@@ -26,16 +26,16 @@
     return _selectedAssets;
 }
 
-- (void)pickerCancel{
+- (void)pickerCancel:(BOOL)animated{
     if([self.assetsPickerController.delegate respondsToSelector:@selector(assetsPickerControllerDidCancel:)]){
         [self.assetsPickerController.delegate assetsPickerControllerDidCancel:self.assetsPickerController];
     }
     
-    [self.assetsPickerController dismissViewControllerAnimated:YES completion:NULL];
+    [self.assetsPickerController dismissViewControllerAnimated:animated completion:NULL];
 }
 
 - (void)assetsViewControllerDidCancel:(CXAssetsViewController *)viewController{
-    [self pickerCancel];
+    [self pickerCancel:YES];
 }
 
 - (void)assetsViewControllerDidCompleted:(CXAssetsViewController *)viewController{
@@ -53,7 +53,7 @@
     
     [self.assetsPickerController.delegate assetsPickerController:self.assetsPickerController didFinishPickingAssets:[_selectedAssets copy] assetsType:self.assetsPickerController.assetsType];
     
-    if(self.assetsPickerController.isFinishDismissViewController){
+    if(self.assetsPickerController.isFinishedDismissViewController){
         [self.assetsPickerController dismissViewControllerAnimated:YES completion:NULL];
     }
 }
@@ -83,7 +83,7 @@
         [self.assetsPickerController.delegate assetsPickerController:self.assetsPickerController didSelectCountReachedEnableMaximumCount:self.assetsPickerController.enableMaximumCount];
     }else{
         [CXAlertControllerUtils showAlertWithConfigBlock:^(CXAlertControllerConfigModel *config) {
-            config.title = [NSString stringWithFormat:@"您最多只能选择 %@ 张照片", @(self.assetsPickerController.enableMaximumCount)];
+            config.title = [NSString stringWithFormat:@"你最多只能选择 %@ 张照片", @(self.assetsPickerController.enableMaximumCount)];
             config.viewController = self.assetsPickerController.visibleViewController;
         } completion:nil];
     }

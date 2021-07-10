@@ -22,7 +22,7 @@
 @property (nonatomic, assign, getter = isMultiSelectionMode) BOOL multiSelectionMode; // Default YES
 
 @property (nonatomic, assign, getter = isShowEmptyGroups) BOOL showEmptyGroups; // Default NO
-@property (nonatomic, assign, getter = isFinishDismissViewController) BOOL finishDismissViewController; // Default YES.
+@property (nonatomic, assign, getter = isFinishedDismissViewController) BOOL finishedDismissViewController; // Default YES.
 @property (nonatomic, assign, getter = isEnablePreview) BOOL enablePreview;
 
 @property (nonatomic, strong) UIColor *toolbarItemBackgroundColor; // Assets view bottom toolbar barButtonItem background color.

@@ -20,7 +20,7 @@
 - (instancetype)initWithAssetsType:(CXAssetsType)assetsType{
     if(self = [super initWithRootViewController:[[CXAssetsGroupViewController alloc] init]]){
         _assetsType = assetsType;
-        _finishDismissViewController = YES;
+        _finishedDismissViewController = YES;
         _showEmptyGroups = NO;
         _enablePreview = YES;
         _multiSelectionMode = YES;

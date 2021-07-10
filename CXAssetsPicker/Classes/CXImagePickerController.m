@@ -83,7 +83,7 @@
 
 - (void)handleSelectedImage:(UIImage *)image completion:(void (^)(NSString *))completion{
     if(image){
-        [CXImageUtil imageBase64:@[image] completion:^(NSArray<NSString *> *base64Images) {
+        [CXImageUtils imageBase64:@[image] completion:^(NSArray<NSString *> *base64Images) {
             !completion ?: completion(base64Images.firstObject);
         }];
     }else{
@@ -188,7 +188,7 @@
         }else{
             CXAssetsPickerController *assetsPickerController = [[CXAssetsPickerController alloc] initWithAssetsType:CXAssetsPhoto];
             assetsPickerController.delegate = self;
-            assetsPickerController.finishDismissViewController = NO;
+            assetsPickerController.finishedDismissViewController = NO;
             assetsPickerController.enableMaximumCount = 1;
             assetsPickerController.multiSelectionMode = NO;
             viewController = assetsPickerController;

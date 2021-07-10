@@ -9,12 +9,12 @@
 #import "CXAssetsViewController.h"
 #import "CXAssetsGroupTableViewCell.h"
 #import "PHFetchResult+CXExtensions.h"
+#import "CXAssetsGroupNoDataView.h"
 
-@interface CXAssetsGroupViewController () <UITableViewDataSource, UITableViewDelegate> {
+@interface CXAssetsGroupViewController () <UITableViewDataSource, UITableViewDelegate, CXAssetsGroupNoDataViewDelegate> {
     CXTableView *_tableView;
+    CXAssetsGroupNoDataView *_noDataView;
     NSMutableArray<PHFetchResult<PHAsset *> *> *_assetsGroups;
-    UILabel *_noDataLabel;
-    UIView *_noDataView;
 }
 
 @end
@@ -25,59 +25,67 @@
     [super viewDidLoad];
     
     self.title = NSLocalizedString(@"相簿", nil);
-    
     self.navigationBar.translucent = YES;
     self.navigationBar.hiddenBottomHorizontalLine = NO;
     self.navigationBar.navigationItem.rightBarButtonItem = [[CXBarButtonItem alloc] initWithTitle:NSLocalizedString(@"取消", nil) target:self action:@selector(didClickCancelBarButtonItem:)];
     
     _assetsGroups = [NSMutableArray array];
-    
     _tableView = [[CXTableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
     _tableView.delegate = self;
     _tableView.dataSource = self;
+    _tableView.backgroundColor = [UIColor clearColor];
     _tableView.contentInset = UIEdgeInsetsMake(CGRectGetMaxY(self.navigationBar.frame), 0, [UIScreen mainScreen].cx_safeAreaInsets.bottom, 0);
     [self.view addSubview:_tableView];
     
-    _noDataLabel = [[UILabel alloc] init];
-    _noDataLabel.textAlignment = NSTextAlignmentCenter;
-    _noDataLabel.textColor = [UIColor lightGrayColor];
-    _noDataLabel.font = CX_PingFangSC_RegularFont(18.0);
-    _noDataLabel.numberOfLines = 0;
+    _noDataView = [[CXAssetsGroupNoDataView alloc] init];
+    _noDataView.buttonBackgroundColor = self.assetsPickerController.toolbarItemBackgroundColor;
+    _noDataView.buttonFontColor = self.assetsPickerController.toolbarItemFontColor;
+    _noDataView.delegate = self;
+    _noDataView.hidden = YES;
+    CGFloat noDataView_X = 20.0;
+    CGFloat noDataView_Y = CGRectGetMaxY(self.navigationBar.frame);
+    CGFloat noDataView_W = CGRectGetWidth(self.view.bounds) - noDataView_X * 2;
+    CGFloat noDataView_H = CGRectGetHeight(self.view.bounds) - noDataView_Y;
+    _noDataView.frame = CGRectMake(noDataView_X, noDataView_Y, noDataView_W, noDataView_H);
+    [self.view addSubview:_noDataView];
+    
+    [self setNoDataViewTips];
+    [self loadAssetsGroups];
+}
+
+- (void)setNoDataViewTips{
     switch (self.assetsPickerController.assetsType) {
         case CXAssetsPhoto:{
-            _noDataLabel.text = NSLocalizedString(@"暂无照片", nil);
+            [_noDataView setNoDataTips:NSLocalizedString(@"暂无照片", nil) authorized:YES];
         }
             break;
         case CXAssetsVideo:{
-            _noDataLabel.text = NSLocalizedString(@"暂无视频", nil);
+            [_noDataView setNoDataTips:NSLocalizedString(@"暂无视频", nil) authorized:YES];
         }
             break;
         case CXAssetsAll:{
-            _noDataLabel.text = NSLocalizedString(@"暂无内容", nil);
+            [_noDataView setNoDataTips:NSLocalizedString(@"暂无内容", nil) authorized:YES];
         }
             break;
         default:
             break;
     }
-    
-    CGFloat noDataLabel_X = 20.0;
-    CGFloat noDataLabel_H = 200.0;
-    CGFloat noDataLabel_W = self.view.bounds.size.width - noDataLabel_X * 2;
-    CGFloat noDataLabel_Y = (self.view.bounds.size.height - noDataLabel_H) * 0.5;
-    _noDataLabel.frame = CGRectMake(noDataLabel_X, noDataLabel_Y, noDataLabel_W, noDataLabel_H);
-    
-    _noDataView = [[UIView alloc] initWithFrame:self.view.bounds];
-    _noDataView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
-    _noDataView.backgroundColor = self.view.backgroundColor;
-    _noDataView.hidden = YES;
-    [_noDataView addSubview:_noDataLabel];
-    [self.view addSubview:_noDataView];
-    
-    [self loadAssetsGroups];
 }
 
 - (void)didClickCancelBarButtonItem:(CXBarButtonItem *)barButtonItem{
-    [self pickerCancel];
+    [self pickerCancel:YES];
+}
+
+- (void)assetsGroupNoDataViewDidOpenAuthorization:(CXAssetsGroupNoDataView *)view{
+    [CXAppUtils openSettingsPageWithCompletion:^(BOOL success) {
+        if(!success){
+            return;
+        }
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.75 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self pickerCancel:NO];
+        });
+    }];
 }
 
 - (void)loadAssetsGroups{
@@ -109,9 +117,10 @@
                     [self.navigationController pushViewController:VC animated:NO];
                 }
             }else{
-                NSString *bundleDisplayName = [NSBundle mainBundle].cx_appName;
-                NSString *error = NSLocalizedString(@"您目前拒绝\"%@\"访问相册，请在\"设置\"->\"隐私\"->\"照片\"中找到\"%@\"，打开相册访问权限。", nil);
-                self->_noDataLabel.text = [NSString stringWithFormat:error, bundleDisplayName, bundleDisplayName];
+                NSString *displayName = [NSBundle mainBundle].cx_displayName;
+                NSString *tips = [NSString stringWithFormat:@"应用“%@”没有相册访问权限", displayName];
+                [_noDataView setNoDataTips:tips authorized:NO];
+                self.navigationBar.navigationItem.rightBarButtonItem.title = NSLocalizedString(@"关闭", nil);
             }
             
             [self reloadData];
