@@ -14,10 +14,10 @@
 @protocol CXAssetsPreviewControllerDelegate <NSObject>
 
 @optional
-
-- (void)assetsPreviewController:(CXAssetsPreviewController *)assetsPreviewController didSelectAsset:(PHAsset *)asset;
-- (void)assetsPreviewControllerDidCompleted:(CXAssetsPreviewController *)assetsPreviewController;
-- (void)assetsPreviewController:(CXAssetsPreviewController *)assetsPreviewController
+- (BOOL)assetsPreviewController:(CXAssetsPreviewController *)viewController shouldSelectAsset:(PHAsset *)asset;
+- (void)assetsPreviewController:(CXAssetsPreviewController *)viewController didSelectAsset:(PHAsset *)asset;
+- (void)assetsPreviewControllerDidCompleted:(CXAssetsPreviewController *)viewController;
+- (void)assetsPreviewController:(CXAssetsPreviewController *)viewController
        didSelectedOriginalImage:(BOOL)isSelected;
 
 @end

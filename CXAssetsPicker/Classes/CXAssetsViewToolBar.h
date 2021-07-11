@@ -12,10 +12,9 @@
 @protocol CXAssetsViewToolBarDelegate <NSObject>
 
 @optional
-
-- (void)assetsViewToolBarDidCompleted:(CXAssetsViewToolBar *)assetsViewToolBar;
-- (void)assetsViewToolBarDidPreviewed:(CXAssetsViewToolBar *)assetsViewToolBar;
-- (void)assetsViewToolBar:(CXAssetsViewToolBar *)assetsViewToolBar didSelectedOriginalImage:(BOOL)isSelected;;
+- (void)assetsViewToolBarDidCompleted:(CXAssetsViewToolBar *)toolBar;
+- (void)assetsViewToolBarDidPreviewed:(CXAssetsViewToolBar *)toolBar;
+- (void)assetsViewToolBar:(CXAssetsViewToolBar *)toolBar didSelectedOriginalImage:(BOOL)isSelected;;
 
 @end
 
@@ -28,10 +27,6 @@
 @property (nonatomic, assign, getter = isHiddenPreviewItem) BOOL hiddenPreviewItem;
 @property (nonatomic, assign, getter = isSelectedOriginalImage) BOOL selectedOriginalImage;
 @property (nonatomic, assign, getter = isTranslucent) BOOL translucent;
-
-@property (nonatomic, strong) UIColor *barButtonItemBackgroundColor;
-@property (nonatomic, strong) UIColor *barButtonItemFontColor;
-@property (nonatomic, copy) NSString *sendBarButtonItemText;
 
 - (void)setHidden:(BOOL)hidden animated:(BOOL)animated;
 

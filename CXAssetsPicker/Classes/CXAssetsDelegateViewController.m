@@ -27,11 +27,11 @@
 }
 
 - (void)pickerCancel:(BOOL)animated{
-    if([self.assetsPickerController.delegate respondsToSelector:@selector(assetsPickerControllerDidCancel:)]){
-        [self.assetsPickerController.delegate assetsPickerControllerDidCancel:self.assetsPickerController];
+    if([self.pickerController.delegate respondsToSelector:@selector(assetsPickerControllerDidCancel:)]){
+        [self.pickerController.delegate assetsPickerControllerDidCancel:self.pickerController];
     }
     
-    [self.assetsPickerController dismissViewControllerAnimated:animated completion:NULL];
+    [self.pickerController dismissViewControllerAnimated:animated completion:NULL];
 }
 
 - (void)assetsViewControllerDidCancel:(CXAssetsViewController *)viewController{
@@ -39,10 +39,10 @@
 }
 
 - (void)assetsViewControllerDidCompleted:(CXAssetsViewController *)viewController{
-    if(self.assetsPickerController.enableMinimumCount > 0 &&
-       _selectedAssets.count < self.assetsPickerController.enableMinimumCount){
-        if([self.assetsPickerController.delegate respondsToSelector:@selector(assetsPickerController:didSelectCountUnderEnableMinimumCount:)]){
-            [self.assetsPickerController.delegate assetsPickerController:self.assetsPickerController didSelectCountUnderEnableMinimumCount:self.assetsPickerController.enableMinimumCount];
+    if(self.pickerController.enableMinimumCount > 0 &&
+       _selectedAssets.count < self.pickerController.enableMinimumCount){
+        if([self.pickerController.delegate respondsToSelector:@selector(assetsPickerController:didSelectCountUnderEnableMinimumCount:)]){
+            [self.pickerController.delegate assetsPickerController:self.pickerController didSelectCountUnderEnableMinimumCount:self.pickerController.enableMinimumCount];
             return;
         }
     }
@@ -51,10 +51,10 @@
         obj.cx_originalImage = viewController.isSelectedOriginalImage;
     }];
     
-    [self.assetsPickerController.delegate assetsPickerController:self.assetsPickerController didFinishPickingAssets:[_selectedAssets copy] assetsType:self.assetsPickerController.assetsType];
+    [self.pickerController.delegate assetsPickerController:self.pickerController didFinishPickingAssets:[_selectedAssets copy] assetsType:self.pickerController.assetsType];
     
-    if(self.assetsPickerController.isFinishedDismissViewController){
-        [self.assetsPickerController dismissViewControllerAnimated:YES completion:NULL];
+    if(self.pickerController.isFinishedDismissViewController){
+        [self.pickerController dismissViewControllerAnimated:YES completion:NULL];
     }
 }
 
@@ -62,29 +62,29 @@
     [_selectedAssets addObject:asset];
     asset.cx_selectedIndex = _selectedAssets.count - 1;
     
-    if([self.assetsPickerController.delegate respondsToSelector:@selector(assetsPickerController:didSelectAsset:)]){
-        [self.assetsPickerController.delegate assetsPickerController:self.assetsPickerController didSelectAsset:asset];
+    if([self.pickerController.delegate respondsToSelector:@selector(assetsPickerController:didSelectAsset:)]){
+        [self.pickerController.delegate assetsPickerController:self.pickerController didSelectAsset:asset];
     }
 }
 
 - (void)assetsViewController:(CXAssetsViewController *)viewController didDeselectAsset:(PHAsset *)asset{
     [_selectedAssets removeObject:asset];
-    if([self.assetsPickerController.delegate respondsToSelector:@selector(assetsPickerController:didDeselectAsset:)]){
-        [self.assetsPickerController.delegate assetsPickerController:self.assetsPickerController didDeselectAsset:asset];
+    if([self.pickerController.delegate respondsToSelector:@selector(assetsPickerController:didDeselectAsset:)]){
+        [self.pickerController.delegate assetsPickerController:self.pickerController didDeselectAsset:asset];
     }
 }
 
 - (BOOL)assetsViewController:(CXAssetsViewController *)viewController shouldSelectAsset:(PHAsset *)asset{
-    if(self.assetsPickerController.enableMaximumCount == 0 || _selectedAssets.count < self.assetsPickerController.enableMaximumCount){
+    if(self.pickerController.enableMaximumCount == 0 || _selectedAssets.count < self.pickerController.enableMaximumCount){
         return YES;
     }
     
-    if([self.assetsPickerController.delegate respondsToSelector:@selector(assetsPickerController:didSelectCountReachedEnableMaximumCount:)]){
-        [self.assetsPickerController.delegate assetsPickerController:self.assetsPickerController didSelectCountReachedEnableMaximumCount:self.assetsPickerController.enableMaximumCount];
+    if([self.pickerController.delegate respondsToSelector:@selector(assetsPickerController:didSelectCountReachedEnableMaximumCount:)]){
+        [self.pickerController.delegate assetsPickerController:self.pickerController didSelectCountReachedEnableMaximumCount:self.pickerController.enableMaximumCount];
     }else{
         [CXAlertControllerUtils showAlertWithConfigBlock:^(CXAlertControllerConfigModel *config) {
-            config.title = [NSString stringWithFormat:@"你最多只能选择 %@ 张照片", @(self.assetsPickerController.enableMaximumCount)];
-            config.viewController = self.assetsPickerController.visibleViewController;
+            config.title = [NSString stringWithFormat:@"你最多只能选择 %@ 张照片", @(self.pickerController.enableMaximumCount)];
+            config.viewController = self.pickerController.visibleViewController;
         } completion:nil];
     }
     

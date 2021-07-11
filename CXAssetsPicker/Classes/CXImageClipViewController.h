@@ -12,11 +12,9 @@
 @protocol CXImageClipViewControllerDelegate <NSObject>
 
 @optional
-
-- (void)imageClipViewControllerDidCancel:(CXImageClipViewController *)clipViewController;
-
-- (void)imageClipViewController:(CXImageClipViewController *)clipViewController
-        didFinishedEditingImage:(UIImage *)editedImage;
+- (void)imageClipViewControllerDidCancel:(CXImageClipViewController *)viewController;
+- (void)imageClipViewController:(CXImageClipViewController *)viewController
+        didFinishedEditingImage:(UIImage *)image;
 
 @end
 
@@ -42,8 +40,8 @@ typedef NS_ENUM(NSInteger, CXImageClipToolBarItemType){
 @protocol CXImageClipToolBarDelegate <NSObject>
 
 @optional
-
-- (void)imageClipToolBar:(CXImageClipToolBar *)toolBar handleActionForItem:(CXImageClipToolBarItemType)itemType;
+- (void)imageClipToolBar:(CXImageClipToolBar *)toolBar
+     handleActionForItem:(CXImageClipToolBarItemType)itemType;
 
 @end
 

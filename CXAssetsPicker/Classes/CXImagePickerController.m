@@ -229,15 +229,15 @@
     }
 }
 
-- (void)imageClipViewControllerDidCancel:(CXImageClipViewController *)clipViewController{
-    if(clipViewController.sourceType == UIImagePickerControllerSourceTypeCamera){
-        [self handleCancelWithSourceType:clipViewController.sourceType];
+- (void)imageClipViewControllerDidCancel:(CXImageClipViewController *)viewController{
+    if(viewController.sourceType == UIImagePickerControllerSourceTypeCamera){
+        [self handleCancelWithSourceType:viewController.sourceType];
     }
 }
 
-- (void)imageClipViewController:(CXImageClipViewController *)clipViewController didFinishedEditingImage:(UIImage *)editedImage{
-    [self handleSelectedImage:editedImage sourceType:clipViewController.sourceType];
-    [clipViewController.navigationController dismissViewControllerAnimated:YES completion:NULL];
+- (void)imageClipViewController:(CXImageClipViewController *)viewController didFinishedEditingImage:(UIImage *)image{
+    [self handleSelectedImage:image sourceType:viewController.sourceType];
+    [viewController.navigationController dismissViewControllerAnimated:YES completion:NULL];
 }
 
 - (void)assetsPickerControllerDidCancel:(CXAssetsPickerController *)assetsPickerController{
@@ -248,11 +248,12 @@
     PHImageRequestOptions *options = [PHImageRequestOptions cx_optionsForOriginal:YES];
     [CXHUD showHUD];
     [CXAssetsImageManager requestImageDataForAsset:assets.firstObject options:options completion:^(PHAsset *asset, CXAssetsElementImage *image) {
-        [CXHUD dismiss];
         if(!image.image){
+            [CXHUD showMsg:@"读取照片失败"];
             return;
         }
         
+        [CXHUD dismiss];
         if(self->_params.isClipEnabled){
             CXImageClipViewController *viewController = [[CXImageClipViewController alloc] initWithImage:image.image aspectRatio:self->_params.aspectRatio sourceType:UIImagePickerControllerSourceTypeSavedPhotosAlbum];
             viewController.delegate = self;

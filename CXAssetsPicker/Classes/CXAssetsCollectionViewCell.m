@@ -9,6 +9,7 @@
 #import "CXAssetsToolBarButtonItem.h"
 #import "CXAssetsPickerDefines.h"
 #import "PHAsset+CXExtensions.h"
+#import "CXAssetsPickerAdapter.h"
 
 static UIColor *_selectedAssetBackgroundColor = nil;
 static UIColor *_selectedAssetFontColor = nil;
@@ -44,11 +45,12 @@ static UIColor *_selectedAssetFontColor = nil;
         _selectButton.enableHighlighted = NO;
         _selectButton.barButtonItemFontSize = 12.0;
         _selectButton.backgroundColor = [UIColor clearColor];
-        [_selectButton setImage:CX_ASSETS_PICKER_IMAGE(@"assets_picker_image_selected_0")
+        [_selectButton setImage:[CXAssetsPickerAdapter sharedAdapter].assetNormalStateImage
                        forState:UIControlStateNormal];
-        [_selectButton setImage:[CX_ASSETS_PICKER_IMAGE(@"assets_picker_image_selected_1") cx_imageForTintColor:_selectedAssetBackgroundColor]
+        [_selectButton setImage:[CXAssetsPickerAdapter sharedAdapter].assetSelectedStateImage
                        forState:UIControlStateSelected];
-        [_selectButton setTitleColor:_selectedAssetFontColor forState:UIControlStateNormal];
+        [_selectButton setTitleColor:[CXAssetsPickerAdapter sharedAdapter].toolbarItemFontColor
+                            forState:UIControlStateNormal];
         [_selectButton addTarget:self action:@selector(handleActionForSelectButton:)];
         
         _videoImageView = [[UIImageView alloc] init];
@@ -135,14 +137,6 @@ static UIColor *_selectedAssetFontColor = nil;
     if([self.delegate respondsToSelector:@selector(assetsCollectionViewCellDidSelectAsset:)]){
         [self.delegate assetsCollectionViewCellDidSelectAsset:self];
     }
-}
-
-+ (void)setSelectedAssetBackgroundColor:(UIColor *)color{
-    _selectedAssetBackgroundColor = color;
-}
-
-+ (void)setSelectedAssetFontColor:(UIColor *)color{
-    _selectedAssetFontColor = color;
 }
 
 @end

@@ -9,7 +9,7 @@
 
 @implementation CXAssetsBaseViewController
 
-- (CXAssetsPickerController *)assetsPickerController{
+- (CXAssetsPickerController *)pickerController{
     if([self.navigationController isKindOfClass:[CXAssetsPickerController class]]){
         return (CXAssetsPickerController *)self.navigationController;
     }

@@ -13,9 +13,7 @@
 @protocol CXAssetsCollectionViewCellDelegate <NSObject>
 
 @optional
-
 - (BOOL)assetsCollectionViewCellShouldSelectAsset:(CXAssetsCollectionViewCell *)cell;
-
 - (void)assetsCollectionViewCellDidSelectAsset:(CXAssetsCollectionViewCell *)cell;
 
 @end
@@ -28,11 +26,6 @@
 
 @property (nonatomic, assign) BOOL allowsSelection;
 
-+ (instancetype)cellWithCollectionView:(UICollectionView *)collectionView
-                          forIndexPath:(NSIndexPath *)indexPath;
-
-+ (void)setSelectedAssetBackgroundColor:(UIColor *)color;
-
-+ (void)setSelectedAssetFontColor:(UIColor *)color;
++ (instancetype)cellWithCollectionView:(UICollectionView *)collectionView forIndexPath:(NSIndexPath *)indexPath;
 
 @end

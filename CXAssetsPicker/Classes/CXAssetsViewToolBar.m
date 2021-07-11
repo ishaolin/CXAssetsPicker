@@ -7,8 +7,7 @@
 
 #import "CXAssetsViewToolBar.h"
 #import "CXAssetsToolBarButtonItem.h"
-#import <CXUIKit/CXUIKit.h>
-#import "CXAssetsPickerDefines.h"
+#import "CXAssetsPickerAdapter.h"
 
 @interface CXAssetsViewToolBar(){
     UIToolbar *_contentView;
@@ -29,11 +28,17 @@
         
         _previewItem = [CXAssetsToolBarButtonItem buttonWithType:UIButtonTypeCustom];
         _previewItem.barButtonItemTitle = NSLocalizedString(@"预览", nil);
+        _previewItem.backgroundColor = [CXAssetsPickerAdapter sharedAdapter].toolbarItemBackgroundColor;
+        [_previewItem setTitleColor:[CXAssetsPickerAdapter sharedAdapter].toolbarItemFontColor
+                           forState:UIControlStateNormal];
         [_previewItem addTarget:self action:@selector(didClickPreviewBarButtonItem:)];
         _previewItem.enabled = NO;
         
         _completeItem = [CXAssetsToolBarButtonItem buttonWithType:UIButtonTypeCustom];
         _completeItem.barButtonItemTitle = NSLocalizedString(@"确定", nil);
+        _completeItem.backgroundColor = [CXAssetsPickerAdapter sharedAdapter].toolbarItemBackgroundColor;
+        [_completeItem setTitleColor:[CXAssetsPickerAdapter sharedAdapter].toolbarItemFontColor
+                            forState:UIControlStateNormal];
         [_completeItem addTarget:self action:@selector(didClickCompleteBarButtonItem:)];
         _completeItem.enabled = NO;
         
@@ -41,41 +46,21 @@
         _originalItem.barButtonItemTitle = NSLocalizedString(@"原图", nil);
         _originalItem.backgroundColor = [UIColor clearColor];
         _originalItem.enableHighlighted = NO;
-        [_originalItem setImage:[CX_ASSETS_PICKER_IMAGE(@"assets_picker_image_selected_0") cx_imageForTintColor:CXHexIColor(0x26AB28)] forState:UIControlStateNormal];
-        [_originalItem setImage:CX_ASSETS_PICKER_IMAGE(@"assets_original_image_selected_1") forState:UIControlStateSelected];
+        [_originalItem setImage:[CXAssetsPickerAdapter sharedAdapter].originalImageOptionNormalStateImage forState:UIControlStateNormal];
+        [_originalItem setImage:[CXAssetsPickerAdapter sharedAdapter].originalImageOptionSelectedStateImage forState:UIControlStateSelected];
         _originalItem.barButtonItemFontSize = 17;
         _originalItem.titleEdgeInsets = UIEdgeInsetsMake(0, 5.0, 0, 0);
-        [_originalItem setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
+        [_originalItem setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         [_originalItem addTarget:self action:@selector(didClickOriginalBarButtonItem:)];
         
         [self addSubview:_previewItem];
         [self addSubview:_completeItem];
         [self addSubview:_originalItem];
+        
+        self.selectedOriginalImage = [CXAssetsPickerAdapter sharedAdapter].isSelectedOriginalImage;
     }
     
     return self;
-}
-
-- (void)setBarButtonItemBackgroundColor:(UIColor *)barButtonItemBackgroundColor{
-    if(barButtonItemBackgroundColor != nil){
-        _previewItem.backgroundColor = barButtonItemBackgroundColor;
-        _completeItem.backgroundColor = barButtonItemBackgroundColor;
-    }
-}
-
-- (void)setBarButtonItemFontColor:(UIColor *)barButtonItemFontColor{
-    if(barButtonItemFontColor != nil){
-        [_previewItem setTitleColor:barButtonItemFontColor forState:UIControlStateNormal];
-        [_completeItem setTitleColor:barButtonItemFontColor forState:UIControlStateNormal];
-    }
-}
-
-- (void)setSendBarButtonItemText:(NSString *)sendBarButtonItemText{
-    _sendBarButtonItemText = sendBarButtonItemText;
-    
-    if(sendBarButtonItemText){
-        [self setSelectedCount:_selectedCount];
-    }
 }
 
 - (void)setHiddenPreviewItem:(BOOL)hiddenPreviewItem{
@@ -113,6 +98,8 @@
 
 - (void)didClickOriginalBarButtonItem:(CXAssetsToolBarButtonItem *)barButtonItem{
     self.selectedOriginalImage = !self.isSelectedOriginalImage;
+    [CXAssetsPickerAdapter sharedAdapter].selectedOriginalImage = self.isSelectedOriginalImage;
+    
     if([self.delegate respondsToSelector:@selector(assetsViewToolBar:didSelectedOriginalImage:)]){
         [self.delegate assetsViewToolBar:self didSelectedOriginalImage:self.isSelectedOriginalImage];
     }
@@ -167,12 +154,17 @@
     _completeItem.enabled = _selectedCount > 0;
     _previewItem.enabled = _completeItem.isEnabled;
     
-    NSString *barButtonItemTitle = NSLocalizedString(self.sendBarButtonItemText ?: @"确定", nil);
+    NSString *barButtonItemTitle = NSLocalizedString([CXAssetsPickerAdapter sharedAdapter].toolbarSendItemText ?: @"确定", nil);
     if(_selectedCount > 0){
         if(self.enableMaximumCount > 0){
-            _completeItem.barButtonItemTitle = [NSString stringWithFormat:@"%@(%@/%@)", barButtonItemTitle, @(_selectedCount), @(self.enableMaximumCount)];
+            _completeItem.barButtonItemTitle = [NSString stringWithFormat:@"%@(%@/%@)",
+                                                barButtonItemTitle,
+                                                @(_selectedCount),
+                                                @(self.enableMaximumCount)];
         }else{
-            _completeItem.barButtonItemTitle = [NSString stringWithFormat:@"%@(%@)", barButtonItemTitle, @(_selectedCount)];
+            _completeItem.barButtonItemTitle = [NSString stringWithFormat:@"%@(%@)",
+                                                barButtonItemTitle,
+                                                @(_selectedCount)];
         }
     }else{
         _completeItem.barButtonItemTitle = barButtonItemTitle;

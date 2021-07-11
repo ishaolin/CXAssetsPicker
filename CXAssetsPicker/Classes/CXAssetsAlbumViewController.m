@@ -1,35 +1,41 @@
 //
-//  CXAssetsGroupViewController.m
+//  CXAssetsAlbumViewController.m
 //  Pods
 //
 //  Created by wshaolin on 15/7/9.
 //
 
-#import "CXAssetsGroupViewController.h"
+#import "CXAssetsAlbumViewController.h"
 #import "CXAssetsViewController.h"
-#import "CXAssetsGroupTableViewCell.h"
+#import "CXAssetsAlbumTableViewCell.h"
 #import "PHFetchResult+CXExtensions.h"
-#import "CXAssetsGroupNoDataView.h"
+#import "CXAssetsAlbumNoDataView.h"
+#import "CXAssetsPickerAdapter.h"
 
-@interface CXAssetsGroupViewController () <UITableViewDataSource, UITableViewDelegate, CXAssetsGroupNoDataViewDelegate> {
+@interface CXAssetsAlbumViewController () <UITableViewDataSource, UITableViewDelegate, CXAssetsAlbumNoDataViewDelegate> {
     CXTableView *_tableView;
-    CXAssetsGroupNoDataView *_noDataView;
-    NSMutableArray<PHFetchResult<PHAsset *> *> *_assetsGroups;
+    CXAssetsAlbumNoDataView *_noDataView;
+    NSMutableArray<PHFetchResult<PHAsset *> *> *_assetsAlbums;
 }
 
 @end
 
-@implementation CXAssetsGroupViewController
+@implementation CXAssetsAlbumViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    CXAssetsPickerAdapter *adapter = [CXAssetsPickerAdapter sharedAdapter];
+    adapter.toolbarItemBackgroundColor = self.pickerController.toolbarItemBackgroundColor;
+    adapter.toolbarItemFontColor = self.pickerController.toolbarItemFontColor;
+    adapter.toolbarSendItemText = self.pickerController.toolbarSendItemText;
     
     self.title = NSLocalizedString(@"相簿", nil);
     self.navigationBar.translucent = YES;
     self.navigationBar.hiddenBottomHorizontalLine = NO;
     self.navigationBar.navigationItem.rightBarButtonItem = [[CXBarButtonItem alloc] initWithTitle:NSLocalizedString(@"取消", nil) target:self action:@selector(didClickCancelBarButtonItem:)];
     
-    _assetsGroups = [NSMutableArray array];
+    _assetsAlbums = [NSMutableArray array];
     _tableView = [[CXTableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
     _tableView.delegate = self;
     _tableView.dataSource = self;
@@ -37,9 +43,7 @@
     _tableView.contentInset = UIEdgeInsetsMake(CGRectGetMaxY(self.navigationBar.frame), 0, [UIScreen mainScreen].cx_safeAreaInsets.bottom, 0);
     [self.view addSubview:_tableView];
     
-    _noDataView = [[CXAssetsGroupNoDataView alloc] init];
-    _noDataView.buttonBackgroundColor = self.assetsPickerController.toolbarItemBackgroundColor;
-    _noDataView.buttonFontColor = self.assetsPickerController.toolbarItemFontColor;
+    _noDataView = [[CXAssetsAlbumNoDataView alloc] init];
     _noDataView.delegate = self;
     _noDataView.hidden = YES;
     CGFloat noDataView_X = 20.0;
@@ -49,12 +53,12 @@
     _noDataView.frame = CGRectMake(noDataView_X, noDataView_Y, noDataView_W, noDataView_H);
     [self.view addSubview:_noDataView];
     
-    [self setNoDataViewTips];
-    [self loadAssetsGroups];
+    [self setEmptyDataTips];
+    [self loadAssetsAlbums];
 }
 
-- (void)setNoDataViewTips{
-    switch (self.assetsPickerController.assetsType) {
+- (void)setEmptyDataTips{
+    switch (self.pickerController.assetsType) {
         case CXAssetsPhoto:{
             [_noDataView setNoDataTips:NSLocalizedString(@"暂无照片", nil) authorized:YES];
         }
@@ -76,7 +80,7 @@
     [self pickerCancel:YES];
 }
 
-- (void)assetsGroupNoDataViewDidOpenAuthorization:(CXAssetsGroupNoDataView *)view{
+- (void)assetsAlbumNoDataViewDidOpenAuthorization:(CXAssetsAlbumNoDataView *)view{
     [CXAppUtils openSettingsPageWithCompletion:^(BOOL success) {
         if(!success){
             return;
@@ -88,31 +92,31 @@
     }];
 }
 
-- (void)loadAssetsGroups{
+- (void)loadAssetsAlbums{
     [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
         [CXDispatchHandler asyncOnMainQueue:^{
             if(status == PHAuthorizationStatusNotDetermined || status == PHAuthorizationStatusAuthorized){
                 PHFetchResult<PHAssetCollection *> *assetCollections = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeAny options:nil];
                 [assetCollections enumerateObjectsUsingBlock:^(PHAssetCollection * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                    PHFetchResult<PHAsset *> *assetsGroup = [PHAsset fetchAssetsInAssetCollection:obj options:nil];
-                    if(!assetsGroup){
+                    PHFetchResult<PHAsset *> *assetsAlbum = [PHAsset fetchAssetsInAssetCollection:obj options:nil];
+                    if(!assetsAlbum){
                         return;
                     }
-                    assetsGroup.cx_mediaType = self.assetsPickerController.assetsType;
-                    assetsGroup.cx_title = obj.localizedTitle;
+                    assetsAlbum.cx_mediaType = self.pickerController.assetsType;
+                    assetsAlbum.cx_title = obj.localizedTitle;
                     
-                    if(assetsGroup.cx_countOfAssets > 0 || self.assetsPickerController.isShowEmptyGroups){
-                        [self->_assetsGroups addObject:assetsGroup];
+                    if(assetsAlbum.cx_countOfAssets > 0 || self.pickerController.isShowEmptyAlbum){
+                        [self->_assetsAlbums addObject:assetsAlbum];
                     }
                 }];
                 
-                [self->_assetsGroups sortUsingComparator:^NSComparisonResult(PHFetchResult<PHAsset *> * _Nonnull obj1, PHFetchResult<PHAsset *> * _Nonnull obj2) {
+                [self->_assetsAlbums sortUsingComparator:^NSComparisonResult(PHFetchResult<PHAsset *> * _Nonnull obj1, PHFetchResult<PHAsset *> * _Nonnull obj2) {
                     return [@(obj2.cx_countOfAssets) compare:@(obj1.cx_countOfAssets)];
                 }];
                 
-                if(self->_assetsGroups.firstObject){
+                if(self->_assetsAlbums.firstObject){
                     CXAssetsViewController *VC = [[CXAssetsViewController alloc] init];
-                    [VC setAssetsGroup:self->_assetsGroups.firstObject];
+                    [VC setAssetsAlbum:self->_assetsAlbums.firstObject];
                     VC.delegate = self;
                     [self.navigationController pushViewController:VC animated:NO];
                 }
@@ -129,21 +133,21 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return _assetsGroups.count;
+    return _assetsAlbums.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    CXAssetsGroupTableViewCell *cell = [CXAssetsGroupTableViewCell cellWithTableView:tableView];
+    CXAssetsAlbumTableViewCell *cell = [CXAssetsAlbumTableViewCell cellWithTableView:tableView];
     cell.firstRowInSection = indexPath.row == 0;
-    cell.lastRowInSection = (indexPath.row == _assetsGroups.count - 1);
-    cell.assetsGroup = _assetsGroups[indexPath.row];
+    cell.lastRowInSection = (indexPath.row == _assetsAlbums.count - 1);
+    cell.assetsAlbum = _assetsAlbums[indexPath.row];
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     CXAssetsViewController *VC = [[CXAssetsViewController alloc] init];
-    [VC setAssetsGroup:_assetsGroups[indexPath.row]];
+    [VC setAssetsAlbum:_assetsAlbums[indexPath.row]];
     VC.delegate = self;
     [self.navigationController pushViewController:VC animated:YES];
 }
@@ -153,7 +157,7 @@
 }
 
 - (void)reloadData{
-    _tableView.hidden = CXArrayIsEmpty(_assetsGroups);
+    _tableView.hidden = CXArrayIsEmpty(_assetsAlbums);
     _noDataView.hidden = !_tableView.isHidden;
     [_tableView reloadData];
 }

@@ -12,6 +12,7 @@
 #import "CXAssetsPickerDefines.h"
 #import "CXAssetsPreviewImageCell.h"
 #import "CXAssetsPreviewVideoCell.h"
+#import "CXAssetsPickerAdapter.h"
 
 @interface CXAssetsPreviewController ()<UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, CXAssetsPreviewViewCellDelegate, CXAssetsViewToolBarDelegate>{
     CXAssetsPreviewCollectionView *_collectionView;
@@ -33,7 +34,7 @@
         _actionButton.enableHighlighted = NO;
         _actionButton.barButtonItemFontSize = 13.0;
         _actionButton.backgroundColor = [UIColor clearColor];
-        [_actionButton setImage:[CX_ASSETS_PICKER_IMAGE(@"assets_picker_image_selected_0") cx_imageForTintColor:CXHexIColor(0x999999)] forState:UIControlStateNormal];
+        [_actionButton setImage:[[CXAssetsPickerAdapter sharedAdapter].assetNormalStateImage cx_imageForTintColor:CXHexIColor(0x999999)] forState:UIControlStateNormal];
         [_actionButton addTarget:self action:@selector(handleActionButton:)];
         _actionButton.frame = (CGRect){0, 0, 25.0, 25.0};
         
@@ -60,19 +61,15 @@
     _collectionView.frame = frame;
     [self.view addSubview:_collectionView];
     
-    if(self.assetsPickerController.isMultiSelectionMode){
+    if(self.pickerController.isMultiSelectionMode){
         self.navigationBar.navigationItem.rightBarButtonItem = [[CXBarButtonItem alloc] initWithCustomView:_actionButton];
         
-        UIColor *toolbarItemBackgroundColor = self.assetsPickerController.toolbarItemBackgroundColor;
-        UIColor *toolbarItemFontColor = self.assetsPickerController.toolbarItemFontColor;
-        [_actionButton setTitleColor:toolbarItemFontColor forState:UIControlStateNormal];
-        [_actionButton setImage:[CX_ASSETS_PICKER_IMAGE(@"assets_picker_image_selected_1") cx_imageForTintColor:toolbarItemBackgroundColor] forState:UIControlStateSelected];
+        [_actionButton setTitleColor:[CXAssetsPickerAdapter sharedAdapter].toolbarItemFontColor forState:UIControlStateNormal];
+        [_actionButton setImage:[CXAssetsPickerAdapter sharedAdapter].assetSelectedStateImage
+                       forState:UIControlStateSelected];
         
         _toolBar.translucent = self.navigationBar.isTranslucent;
-        _toolBar.enableMaximumCount = self.assetsPickerController.enableMaximumCount;
-        _toolBar.barButtonItemBackgroundColor = toolbarItemBackgroundColor;
-        _toolBar.barButtonItemFontColor = toolbarItemFontColor;
-        _toolBar.sendBarButtonItemText = self.assetsPickerController.toolbarSendItemText;
+        _toolBar.enableMaximumCount = self.pickerController.enableMaximumCount;
         _toolBar.selectedOriginalImage = self.isSelectedOriginalImage;
         
         CGFloat toolBar_H = CGRectGetHeight(_toolBar.frame);
@@ -103,22 +100,21 @@
 }
 
 - (void)handleActionButton:(CXAssetsToolBarButtonItem *)barButtonItem{
-    if(!barButtonItem.isSelected &&
-       self.assetsPickerController.enableMaximumCount > 0 &&
-       _selectedCount == self.assetsPickerController.enableMaximumCount){
-        if([self.assetsPickerController.delegate respondsToSelector:@selector(assetsPickerController:didSelectCountReachedEnableMaximumCount:)]){
-            [self.assetsPickerController.delegate assetsPickerController:self.assetsPickerController didSelectCountReachedEnableMaximumCount:self.assetsPickerController.enableMaximumCount];
-        }
+    if(_currentAssetIndex >= self.assets.count){
         return;
     }
     
-    if(_currentAssetIndex < self.assets.count){
-        barButtonItem.selected = !barButtonItem.isSelected;
-        PHAsset *asset = self.assets[_currentAssetIndex];
-        asset.cx_selected = barButtonItem.isSelected;
-        if([self.delegate respondsToSelector:@selector(assetsPreviewController:didSelectAsset:)]){
-            [self.delegate assetsPreviewController:self didSelectAsset:asset];
+    PHAsset *asset = self.assets[_currentAssetIndex];
+    if(!barButtonItem.isSelected && [self.delegate respondsToSelector:@selector(assetsPreviewController:shouldSelectAsset:)]){
+        if(![self.delegate assetsPreviewController:self shouldSelectAsset:nil]){
+            return;
         }
+    }
+    
+    barButtonItem.selected = !barButtonItem.isSelected;
+    asset.cx_selected = barButtonItem.isSelected;
+    if([self.delegate respondsToSelector:@selector(assetsPreviewController:didSelectAsset:)]){
+        [self.delegate assetsPreviewController:self didSelectAsset:asset];
     }
 }
 
@@ -129,13 +125,13 @@
     [_toolBar setHidden:hidden animated:YES];
 }
 
-- (void)assetsViewToolBarDidCompleted:(CXAssetsViewToolBar *)assetsViewToolBar{
+- (void)assetsViewToolBarDidCompleted:(CXAssetsViewToolBar *)toolBar{
     if([self.delegate respondsToSelector:@selector(assetsPreviewControllerDidCompleted:)]){
         [self.delegate assetsPreviewControllerDidCompleted:self];
     }
 }
 
-- (void)assetsViewToolBar:(CXAssetsViewToolBar *)assetsViewToolBar didSelectedOriginalImage:(BOOL)isSelected{
+- (void)assetsViewToolBar:(CXAssetsViewToolBar *)toolBar didSelectedOriginalImage:(BOOL)isSelected{
     self.selectedOriginalImage = isSelected;
     if([self.delegate respondsToSelector:@selector(assetsPreviewController:didSelectedOriginalImage:)]){
         [self.delegate assetsPreviewController:self didSelectedOriginalImage:isSelected];
@@ -154,6 +150,7 @@
     }else{
         cell = [CXAssetsPreviewImageCell cellWithCollectionView:collectionView forIndexPath:indexPath];
     }
+    
     cell.asset = asset;
     cell.delegate = self;
     return cell;

@@ -1,22 +1,22 @@
 //
-//  CXAssetsGroupNoDataView.m
+//  CXAssetsAlbumNoDataView.m
 //  CXAssetsPicker
 //
 //  Created by wshaolin on 2021/7/10.
 //
 
-#import "CXAssetsGroupNoDataView.h"
+#import "CXAssetsAlbumNoDataView.h"
 #import "CXAssetsToolBarButtonItem.h"
-#import <CXUIKit/CXUIKit.h>
+#import "CXAssetsPickerAdapter.h"
 
-@interface CXAssetsGroupNoDataView (){
+@interface CXAssetsAlbumNoDataView (){
     UILabel *_tipsLabel;
     CXAssetsToolBarButtonItem *_authorizeButton;
 }
 
 @end
 
-@implementation CXAssetsGroupNoDataView
+@implementation CXAssetsAlbumNoDataView
 
 - (instancetype)initWithFrame:(CGRect)frame{
     if(self = [super initWithFrame:frame]){
@@ -29,6 +29,9 @@
         _authorizeButton = [CXAssetsToolBarButtonItem buttonWithType:UIButtonTypeCustom];
         _authorizeButton.barButtonItemTitle = NSLocalizedString(@"前往授权", nil);
         _authorizeButton.barButtonItemFontSize = 17;
+        _authorizeButton.backgroundColor = [CXAssetsPickerAdapter sharedAdapter].toolbarItemBackgroundColor;
+        [_authorizeButton setTitleColor:[CXAssetsPickerAdapter sharedAdapter].toolbarItemFontColor
+                               forState:UIControlStateNormal];
         [_authorizeButton addTarget:self action:@selector(didClickAuthorizeButton:)];
         
         [self addSubview:_tipsLabel];
@@ -39,30 +42,8 @@
 }
 
 - (void)didClickAuthorizeButton:(CXAssetsToolBarButtonItem *)button{
-    if([self.delegate respondsToSelector:@selector(assetsGroupNoDataViewDidOpenAuthorization:)]){
-        [self.delegate assetsGroupNoDataViewDidOpenAuthorization:self];
-    }
-}
-
-- (void)setButtonBackgroundColor:(UIColor *)buttonBackgroundColor{
-    if(_buttonBackgroundColor == buttonBackgroundColor){
-        return;
-    }
-    
-    _buttonBackgroundColor = buttonBackgroundColor;
-    if(_buttonBackgroundColor){
-        _authorizeButton.backgroundColor = _buttonBackgroundColor;
-    }
-}
-
-- (void)setButtonFontColor:(UIColor *)buttonFontColor{
-    if(_buttonFontColor == buttonFontColor){
-        return;
-    }
-    
-    _buttonFontColor = buttonFontColor;
-    if(_buttonFontColor){
-        [_authorizeButton setTitleColor:_buttonFontColor forState:UIControlStateNormal];
+    if([self.delegate respondsToSelector:@selector(assetsAlbumNoDataViewDidOpenAuthorization:)]){
+        [self.delegate assetsAlbumNoDataViewDidOpenAuthorization:self];
     }
 }
 

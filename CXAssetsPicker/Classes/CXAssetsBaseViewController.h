@@ -10,6 +10,6 @@
 
 @interface CXAssetsBaseViewController : CXBaseViewController
 
-@property (nonatomic, weak, readonly) CXAssetsPickerController *assetsPickerController;
+@property (nonatomic, readonly) CXAssetsPickerController *pickerController;
 
 @end

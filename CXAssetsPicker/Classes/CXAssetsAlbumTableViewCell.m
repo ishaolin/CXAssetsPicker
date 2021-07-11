@@ -1,15 +1,15 @@
 //
-//  CXAssetsGroupTableViewCell.m
+//  CXAssetsAlbumTableViewCell.m
 //  Pods
 //
 //  Created by wshaolin on 15/7/9.
 //
 
-#import "CXAssetsGroupTableViewCell.h"
+#import "CXAssetsAlbumTableViewCell.h"
 #import <CXUIKit/CXUIKit.h>
 #import "PHFetchResult+CXExtensions.h"
 
-@interface CXAssetsGroupTableViewCell(){
+@interface CXAssetsAlbumTableViewCell(){
     UIImageView *_displayImageView;
     UILabel *_displayTextLabel;
     
@@ -20,11 +20,11 @@
 
 @end
 
-@implementation CXAssetsGroupTableViewCell
+@implementation CXAssetsAlbumTableViewCell
 
 + (instancetype)cellWithTableView:(UITableView *)tableView{
-    static NSString *reuseIdentifier = @"CXAssetsGroupTableViewCell";
-    CXAssetsGroupTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier];
+    static NSString *reuseIdentifier = @"CXAssetsAlbumTableViewCell";
+    CXAssetsAlbumTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier];
     if(cell == nil){
         cell = [[self alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
     }
@@ -67,14 +67,14 @@
     return self;
 }
 
-- (void)setAssetsGroup:(PHFetchResult<PHAsset *> *)assetsGroup{
-    _assetsGroup = assetsGroup;
+- (void)setAssetsAlbum:(PHFetchResult<PHAsset *> *)assetsAlbum{
+    _assetsAlbum = assetsAlbum;
     
-    [assetsGroup cx_requestPosterImage:^(UIImage *image, NSDictionary<NSString *,id> *info) {
+    [_assetsAlbum cx_requestPosterImage:^(UIImage *image, NSDictionary<NSString *,id> *info) {
         self->_displayImageView.image = image;
     }];
     
-    NSString *attributedText = [NSString stringWithFormat:@"%@ {(%@)}", _assetsGroup.cx_title, @([_assetsGroup cx_countOfAssets])];
+    NSString *attributedText = [NSString stringWithFormat:@"%@ {(%@)}", _assetsAlbum.cx_title, @([_assetsAlbum cx_countOfAssets])];
     [_displayTextLabel cx_setAttributedText:attributedText
                            highlightedColor:[UIColor grayColor]
                             highlightedFont:CX_PingFangSC_RegularFont(16.0)];

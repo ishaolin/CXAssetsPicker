@@ -6,8 +6,9 @@
 //
 
 #import "CXAssetsPickerController.h"
-#import "CXAssetsGroupViewController.h"
+#import "CXAssetsAlbumViewController.h"
 #import <Photos/Photos.h>
+#import "CXAssetsPickerAdapter.h"
 
 @implementation CXAssetsPickerController
 
@@ -18,10 +19,10 @@
 }
 
 - (instancetype)initWithAssetsType:(CXAssetsType)assetsType{
-    if(self = [super initWithRootViewController:[[CXAssetsGroupViewController alloc] init]]){
+    if(self = [super initWithRootViewController:[[CXAssetsAlbumViewController alloc] init]]){
         _assetsType = assetsType;
         _finishedDismissViewController = YES;
-        _showEmptyGroups = NO;
+        _showEmptyAlbum = NO;
         _enablePreview = YES;
         _multiSelectionMode = YES;
         
@@ -35,11 +36,15 @@
 
 - (NSArray<PHAsset *> *)selectedAssets{
     UIViewController *viewController = self.viewControllers.firstObject;
-    if([viewController isKindOfClass:[CXAssetsGroupViewController class]]){
-        return [((CXAssetsGroupViewController *)viewController).selectedAssets copy];
+    if([viewController isKindOfClass:[CXAssetsAlbumViewController class]]){
+        return [((CXAssetsAlbumViewController *)viewController).selectedAssets copy];
     }
     
     return nil;
+}
+
+- (void)dealloc{
+    [CXAssetsPickerAdapter destroyAdapter];
 }
 
 @end

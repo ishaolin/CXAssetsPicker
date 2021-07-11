@@ -21,7 +21,7 @@
 @property (nonatomic, assign) NSUInteger enableMinimumCount; // Default 0，0 is not limited.
 @property (nonatomic, assign, getter = isMultiSelectionMode) BOOL multiSelectionMode; // Default YES
 
-@property (nonatomic, assign, getter = isShowEmptyGroups) BOOL showEmptyGroups; // Default NO
+@property (nonatomic, assign, getter = isShowEmptyAlbum) BOOL showEmptyAlbum; // Default NO
 @property (nonatomic, assign, getter = isFinishedDismissViewController) BOOL finishedDismissViewController; // Default YES.
 @property (nonatomic, assign, getter = isEnablePreview) BOOL enablePreview;
 
@@ -36,19 +36,15 @@
 @protocol CXAssetsPickerControllerDelegate <NSObject>
 
 @required
-
-- (void)assetsPickerController:(CXAssetsPickerController *)assetsPickerController didFinishPickingAssets:(NSArray<PHAsset *> *)assets assetsType:(CXAssetsType)assetsType;
+- (void)assetsPickerController:(CXAssetsPickerController *)picker
+        didFinishPickingAssets:(NSArray<PHAsset *> *)assets
+                    assetsType:(CXAssetsType)assetsType;
 
 @optional
-
-- (void)assetsPickerControllerDidCancel:(CXAssetsPickerController *)assetsPickerController;
-
-- (void)assetsPickerController:(CXAssetsPickerController *)assetsPickerController didSelectAsset:(PHAsset *)asset;
-
-- (void)assetsPickerController:(CXAssetsPickerController *)assetsPickerController didDeselectAsset:(PHAsset *)asset;
-
-- (void)assetsPickerController:(CXAssetsPickerController *)assetsPickerController didSelectCountReachedEnableMaximumCount:(NSUInteger)enableMaximumCount;
-
-- (void)assetsPickerController:(CXAssetsPickerController *)assetsPickerController didSelectCountUnderEnableMinimumCount:(NSUInteger)enableMinimumCount;
+- (void)assetsPickerControllerDidCancel:(CXAssetsPickerController *)picker;
+- (void)assetsPickerController:(CXAssetsPickerController *)picker didSelectAsset:(PHAsset *)asset;
+- (void)assetsPickerController:(CXAssetsPickerController *)picker didDeselectAsset:(PHAsset *)asset;
+- (void)assetsPickerController:(CXAssetsPickerController *)picker didSelectCountReachedEnableMaximumCount:(NSUInteger)enableMaximumCount;
+- (void)assetsPickerController:(CXAssetsPickerController *)picker didSelectCountUnderEnableMinimumCount:(NSUInteger)enableMinimumCount;
 
 @end
