@@ -178,23 +178,19 @@
 
 - (void)presentImagePickerControllerWithSourceType:(UIImagePickerControllerSourceType)sourceType{
     if([UIImagePickerController isSourceTypeAvailable:sourceType]){
-        UIViewController *viewController = nil;
         if(sourceType == UIImagePickerControllerSourceTypeCamera){
-            UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
-            imagePickerController.sourceType = sourceType;
-            imagePickerController.delegate = self;
-            imagePickerController.allowsEditing = NO;
-            viewController = imagePickerController;
+            UIImagePickerController *viewController = [[UIImagePickerController alloc] init];
+            viewController.sourceType = sourceType;
+            viewController.delegate = self;
+            viewController.allowsEditing = NO;
+            [self setContentController:viewController];
         }else{
-            CXAssetsPickerController *assetsPickerController = [[CXAssetsPickerController alloc] initWithAssetsType:CXAssetsPhoto];
-            assetsPickerController.delegate = self;
-            assetsPickerController.finishedDismissViewController = NO;
-            assetsPickerController.enableMaximumCount = 1;
-            assetsPickerController.multiSelectionMode = NO;
-            viewController = assetsPickerController;
+            CXAssetsPickerController *viewController = [[CXAssetsPickerController alloc] initWithAssetsType:CXAssetsPhoto];
+            viewController.delegate = self;
+            viewController.enableMaximumCount = 1;
+            viewController.multiSelectionMode = NO;
+            [self setContentController:viewController];
         }
-        
-        [self setContentController:viewController];
     }else{
         [self handleFinishImage:nil
                    base64String:nil
@@ -244,7 +240,9 @@
     [self handleCancelWithSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
 }
 
-- (void)assetsPickerController:(CXAssetsPickerController *)assetsPickerController didFinishPickingAssets:(NSArray<PHAsset *> *)assets assetsType:(CXAssetsType)assetsType{
+- (void)assetsPickerController:(CXAssetsPickerController *)picker
+        didFinishPickingAssets:(NSArray<PHAsset *> *)assets
+                    assetsType:(CXAssetsType)assetsType{
     PHImageRequestOptions *options = [PHImageRequestOptions cx_optionsForOriginal:YES];
     [CXHUD showHUD];
     [CXAssetsImageManager requestImageDataForAsset:assets.firstObject options:options completion:^(PHAsset *asset, CXAssetsElementImage *image) {
@@ -257,10 +255,10 @@
         if(self->_params.isClipEnabled){
             CXImageClipViewController *viewController = [[CXImageClipViewController alloc] initWithImage:image.image aspectRatio:self->_params.aspectRatio sourceType:UIImagePickerControllerSourceTypeSavedPhotosAlbum];
             viewController.delegate = self;
-            [assetsPickerController pushViewController:viewController animated:YES];
+            [picker pushViewController:viewController animated:YES];
         }else{
             [self handleSelectedImage:image.image sourceType:UIImagePickerControllerSourceTypeSavedPhotosAlbum];
-            [assetsPickerController dismissViewControllerAnimated:YES completion:NULL];
+            [picker dismissViewControllerAnimated:YES completion:NULL];
         }
     }];
 }

@@ -51,11 +51,9 @@
         obj.cx_originalImage = viewController.isSelectedOriginalImage;
     }];
     
-    [self.pickerController.delegate assetsPickerController:self.pickerController didFinishPickingAssets:[_selectedAssets copy] assetsType:self.pickerController.assetsType];
-    
-    if(self.pickerController.isFinishedDismissViewController){
-        [self.pickerController dismissViewControllerAnimated:YES completion:NULL];
-    }
+    [self.pickerController.delegate assetsPickerController:self.pickerController
+                                    didFinishPickingAssets:[_selectedAssets copy]
+                                                assetsType:self.pickerController.assetsType];
 }
 
 - (void)assetsViewController:(CXAssetsViewController *)viewController didSelectAsset:(PHAsset *)asset{

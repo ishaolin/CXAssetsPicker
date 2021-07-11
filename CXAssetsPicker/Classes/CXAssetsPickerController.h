@@ -14,20 +14,18 @@
 
 @property (nonatomic, weak) id<UINavigationControllerDelegate, CXAssetsPickerControllerDelegate> delegate;
 
-@property (nonatomic, assign, readonly) CXAssetsType assetsType; // Default CXAssetsPhoto
-@property (nonatomic, strong, readonly) NSArray<PHAsset *> *selectedAssets; // selected asset
+@property (nonatomic, assign, readonly) CXAssetsType assetsType;
+@property (nonatomic, strong, readonly) NSArray<PHAsset *> *selectedAssets;
 
-@property (nonatomic, assign) NSUInteger enableMaximumCount; // Default 0，0 is not limited.
-@property (nonatomic, assign) NSUInteger enableMinimumCount; // Default 0，0 is not limited.
-@property (nonatomic, assign, getter = isMultiSelectionMode) BOOL multiSelectionMode; // Default YES
-
-@property (nonatomic, assign, getter = isShowEmptyAlbum) BOOL showEmptyAlbum; // Default NO
-@property (nonatomic, assign, getter = isFinishedDismissViewController) BOOL finishedDismissViewController; // Default YES.
+@property (nonatomic, assign) NSUInteger enableMaximumCount;
+@property (nonatomic, assign) NSUInteger enableMinimumCount;
+@property (nonatomic, assign, getter = isMultiSelectionMode) BOOL multiSelectionMode;
+@property (nonatomic, assign, getter = isShowEmptyAlbum) BOOL showEmptyAlbum;
 @property (nonatomic, assign, getter = isEnablePreview) BOOL enablePreview;
 
-@property (nonatomic, strong) UIColor *toolbarItemBackgroundColor; // Assets view bottom toolbar barButtonItem background color.
-@property (nonatomic, strong) UIColor *toolbarItemFontColor; // Assets view bottom toolbar barButtonItem font color.
-@property (nonatomic, copy) NSString *toolbarSendItemText; // Assets view bottom toolbar send barButtonItem text. Default '确定'
+@property (nonatomic, strong) UIColor *toolbarItemBackgroundColor;
+@property (nonatomic, strong) UIColor *toolbarItemFontColor;
+@property (nonatomic, copy) NSString *toolbarSendItemText;
 
 - (instancetype)initWithAssetsType:(CXAssetsType)assetsType;
 

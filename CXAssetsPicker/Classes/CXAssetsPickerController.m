@@ -21,7 +21,6 @@
 - (instancetype)initWithAssetsType:(CXAssetsType)assetsType{
     if(self = [super initWithRootViewController:[[CXAssetsAlbumViewController alloc] init]]){
         _assetsType = assetsType;
-        _finishedDismissViewController = YES;
         _showEmptyAlbum = NO;
         _enablePreview = YES;
         _multiSelectionMode = YES;
