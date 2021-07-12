@@ -96,30 +96,8 @@
     [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
         [CXDispatchHandler asyncOnMainQueue:^{
             if(status == PHAuthorizationStatusNotDetermined || status == PHAuthorizationStatusAuthorized){
-                PHFetchResult<PHAssetCollection *> *assetCollections = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeAny options:nil];
-                [assetCollections enumerateObjectsUsingBlock:^(PHAssetCollection * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                    PHFetchResult<PHAsset *> *assetsAlbum = [PHAsset fetchAssetsInAssetCollection:obj options:nil];
-                    if(!assetsAlbum){
-                        return;
-                    }
-                    assetsAlbum.cx_mediaType = self.pickerController.assetsType;
-                    assetsAlbum.cx_title = obj.localizedTitle;
-                    
-                    if(assetsAlbum.cx_countOfAssets > 0 || self.pickerController.isShowEmptyAlbum){
-                        [self->_assetsAlbums addObject:assetsAlbum];
-                    }
-                }];
-                
-                [self->_assetsAlbums sortUsingComparator:^NSComparisonResult(PHFetchResult<PHAsset *> * _Nonnull obj1, PHFetchResult<PHAsset *> * _Nonnull obj2) {
-                    return [@(obj2.cx_countOfAssets) compare:@(obj1.cx_countOfAssets)];
-                }];
-                
-                if(self->_assetsAlbums.firstObject){
-                    CXAssetsViewController *VC = [[CXAssetsViewController alloc] init];
-                    [VC setAssetsAlbum:self->_assetsAlbums.firstObject];
-                    VC.delegate = self;
-                    [self.navigationController pushViewController:VC animated:NO];
-                }
+                [self loadAssetsAlbumWithTypes:@[@(PHAssetCollectionTypeSmartAlbum), @(PHAssetCollectionTypeAlbum)]];
+                [self pushAssetsViewController:self->_assetsAlbums.firstObject animated:NO];
             }else{
                 NSString *displayName = [NSBundle mainBundle].cx_displayName;
                 NSString *tips = [NSString stringWithFormat:@"应用“%@”没有相册访问权限", displayName];
@@ -129,6 +107,31 @@
             
             [self reloadData];
         }];
+    }];
+}
+
+- (void)loadAssetsAlbumWithTypes:(NSArray<NSNumber *> *)collectionTypes{
+    [collectionTypes enumerateObjectsUsingBlock:^(NSNumber * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        PHAssetCollectionType collectionType = (PHAssetCollectionType)obj.integerValue;
+        PHFetchResult<PHAssetCollection *> *assetCollections = [PHAssetCollection fetchAssetCollectionsWithType:collectionType subtype:PHAssetCollectionSubtypeAny options:nil];
+        [assetCollections enumerateObjectsUsingBlock:^(PHAssetCollection * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            PHFetchResult<PHAsset *> *assetsAlbum = [PHAsset fetchAssetsInAssetCollection:obj options:nil];
+            if(!assetsAlbum){
+                return;
+            }
+            assetsAlbum.cx_mediaType = self.pickerController.assetsType;
+            assetsAlbum.cx_title = obj.localizedTitle;
+            
+            if(assetsAlbum.cx_countOfAssets > 0 || self.pickerController.isShowEmptyAlbum){
+                [self->_assetsAlbums addObject:assetsAlbum];
+            }
+        }];
+        
+        if(collectionType == PHAssetCollectionTypeSmartAlbum){
+            [self->_assetsAlbums sortUsingComparator:^NSComparisonResult(PHFetchResult<PHAsset *> * _Nonnull obj1, PHFetchResult<PHAsset *> * _Nonnull obj2) {
+                return [@(obj2.cx_countOfAssets) compare:@(obj1.cx_countOfAssets)];
+            }];
+        }
     }];
 }
 
@@ -146,14 +149,22 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    CXAssetsViewController *VC = [[CXAssetsViewController alloc] init];
-    [VC setAssetsAlbum:_assetsAlbums[indexPath.row]];
-    VC.delegate = self;
-    [self.navigationController pushViewController:VC animated:YES];
+    [self pushAssetsViewController:_assetsAlbums[indexPath.row] animated:YES];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     return 85.0;
+}
+
+- (void)pushAssetsViewController:(PHFetchResult<PHAsset *> *)assetsAlbum animated:(BOOL)animated{
+    if(!assetsAlbum){
+        return;
+    }
+    
+    CXAssetsViewController *viewController = [[CXAssetsViewController alloc] init];
+    [viewController setAssetsAlbum:assetsAlbum];
+    viewController.delegate = self;
+    [self.navigationController pushViewController:viewController animated:animated];
 }
 
 - (void)reloadData{
