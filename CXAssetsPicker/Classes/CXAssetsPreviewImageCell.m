@@ -36,8 +36,7 @@
 - (void)setAsset:(PHAsset *)asset{
     [super setAsset:asset];
     
-    CGFloat scale = MAX([UIScreen mainScreen].scale, 1.0);
-    [asset cx_thumbnailWithSize:CGSizeMake(asset.pixelWidth / scale, asset.pixelHeight / scale) completion:^(UIImage *image, NSDictionary<NSString *,id> *info) {
+    [asset cx_thumbnailWithCompletion:^(UIImage *image, NSDictionary<NSString *,id> *info) {
         if(image){
             [self->_imageView setImage:image];
         }
@@ -60,6 +59,7 @@
                 if(image.image){
                     [self->_imageView setImage:image.image];
                 }
+                
                 self.hideProgressBar = YES;
             }];
         }else{

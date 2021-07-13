@@ -7,7 +7,7 @@
 
 #import "CXAssetsAlbumTableViewCell.h"
 #import <CXUIKit/CXUIKit.h>
-#import "PHFetchResult+CXExtensions.h"
+#import "PHFetchResult+CXAssetsPicker.h"
 
 @interface CXAssetsAlbumTableViewCell(){
     UIImageView *_displayImageView;

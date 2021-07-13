@@ -1,13 +1,13 @@
 //
-//  PHFetchResult+CXExtensions.h
+//  PHFetchResult+CXAssetsPicker.h
 //  Pods
 //
 //  Created by wshaolin on 2019/2/14.
 //
 
-#import "PHAsset+CXExtensions.h"
+#import "PHAsset+CXAssetsPicker.h"
 
-@interface PHFetchResult (CXExtensions)
+@interface PHFetchResult (CXAssetsPicker)
 
 @property (nonatomic, assign, readonly) NSUInteger cx_countOfAssets;
 

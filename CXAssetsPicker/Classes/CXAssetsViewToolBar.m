@@ -63,9 +63,14 @@
     return self;
 }
 
-- (void)setHiddenPreviewItem:(BOOL)hiddenPreviewItem{
-    _hiddenPreviewItem = hiddenPreviewItem;
-    _previewItem.hidden = hiddenPreviewItem;
+- (void)setHiddenPreviewOption:(BOOL)hiddenPreviewOption{
+    _hiddenPreviewOption = hiddenPreviewOption;
+    _previewItem.hidden = hiddenPreviewOption;
+}
+
+- (void)setHiddenOriginalImageOption:(BOOL)hiddenOriginalImageOption{
+    _hiddenOriginalImageOption = hiddenOriginalImageOption;
+    _originalItem.hidden = hiddenOriginalImageOption;
 }
 
 - (void)setSelectedOriginalImage:(BOOL)selectedOriginalImage{

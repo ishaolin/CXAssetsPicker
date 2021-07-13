@@ -6,7 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "PHAsset+CXExtensions.h"
+#import "PHAsset+CXAssetsPicker.h"
 
 @class CXAssetsCollectionViewCell;
 

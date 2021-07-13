@@ -1,5 +1,5 @@
 //
-//  CXAssetsPickerController.h
+//  PodsController.h
 //  Pods
 //
 //  Created by wshaolin on 15/7/9.

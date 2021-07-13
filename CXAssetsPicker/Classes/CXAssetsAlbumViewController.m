@@ -8,7 +8,7 @@
 #import "CXAssetsAlbumViewController.h"
 #import "CXAssetsViewController.h"
 #import "CXAssetsAlbumTableViewCell.h"
-#import "PHFetchResult+CXExtensions.h"
+#import "PHFetchResult+CXAssetsPicker.h"
 #import "CXAssetsAlbumNoDataView.h"
 #import "CXAssetsPickerAdapter.h"
 

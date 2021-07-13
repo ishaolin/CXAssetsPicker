@@ -83,8 +83,16 @@
     }
 }
 
+- (void)willDisplay{
+    
+}
+
 - (void)endDisplaying{
     
+}
+
+- (void)dealloc{
+    [self endDisplaying];
 }
 
 @end

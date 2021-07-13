@@ -1,5 +1,5 @@
 //
-//  CXAssetsPickerCollectionView.h
+//  PodsCollectionView.h
 //  Pods
 //
 //  Created by wshaolin on 15/7/10.

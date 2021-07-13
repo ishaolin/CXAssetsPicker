@@ -1,6 +1,6 @@
 //
-//  CXAssetsPickerAdapter.m
-//  CXAssetsPicker
+//  PodsAdapter.m
+//  Pods
 //
 //  Created by wshaolin on 2021/7/11.
 //

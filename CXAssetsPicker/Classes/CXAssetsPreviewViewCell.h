@@ -5,7 +5,7 @@
 //  Created by wshaolin on 2019/1/18.
 //
 
-#import "PHAsset+CXExtensions.h"
+#import "PHAsset+CXAssetsPicker.h"
 #import <CXUIKit/CXUIKit.h>
 
 @class CXAssetsPreviewViewCell;
@@ -33,6 +33,7 @@
 
 - (void)handleSingleTouchAction:(UITapGestureRecognizer *)tapGestureRecognizer;
 
+- (void)willDisplay;
 - (void)endDisplaying;
 
 @end

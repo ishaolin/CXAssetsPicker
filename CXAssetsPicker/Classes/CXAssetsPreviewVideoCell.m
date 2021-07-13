@@ -36,11 +36,9 @@
     [super setAsset:asset];
     
     [_videoPlayer hidePlayControl];
-    
-    CGFloat scale = MAX([UIScreen mainScreen].scale, 1.0);
-    [asset cx_thumbnailWithSize:CGSizeMake(asset.pixelWidth / scale, asset.pixelHeight / scale) completion:^(UIImage *image, NSDictionary<NSString *,id> *info) {
+    [asset cx_thumbnailWithCompletion:^(UIImage *image, NSDictionary<NSString *,id> *info) {
         if(image){
-            self->_videoPlayer.snapshotView.image = image;
+            [self setVideoSnapshot:image];
         }else if([info[PHImageResultIsDegradedKey] boolValue] || [info[PHImageResultIsInCloudKey] boolValue]){
             PHImageRequestOptions *options = [PHImageRequestOptions cx_optionsForOriginal:NO];
             [CXAssetsImageManager requestImageDataForAsset:asset options:options completion:^(PHAsset *asset, CXAssetsElementImage *image) {
@@ -49,25 +47,20 @@
                 }
                 
                 if(image.image){
-                    self->_videoPlayer.snapshotView.image = image.image;
+                    [self setVideoSnapshot:image.image];
                 }
             }];
         }
         
         PHVideoRequestOptions *options = [[PHVideoRequestOptions alloc] init];
         options.networkAccessAllowed = YES;
-        if([info[PHImageResultIsInCloudKey] boolValue]){
-            options.progressHandler = ^(double progress, NSError * _Nullable error, BOOL * _Nonnull stop, NSDictionary * _Nullable info) {
-                [CXDispatchHandler asyncOnMainQueue:^{
-                    self.progress = progress;
-                }];
-            };
-            self.hideProgressBar = NO;
-        }else{
-            self.hideProgressBar = YES;
-            [self->_videoPlayer showIndicator];
-        }
+        options.progressHandler = ^(double progress, NSError * _Nullable error, BOOL * _Nonnull stop, NSDictionary * _Nullable info) {
+            [CXDispatchHandler asyncOnMainQueue:^{
+                self.progress = progress;
+            }];
+        };
         
+        [self->_videoPlayer showIndicator];
         [CXAssetsImageManager requestPlayerItemForVideo:asset options:options completion:^(PHAsset *asset, AVPlayerItem *playerItem, NSDictionary<NSString *,id> *info) {
             if(self.asset != asset){
                 return;
@@ -80,10 +73,24 @@
     }];
 }
 
+- (void)setVideoSnapshot:(UIImage *)snapshot{
+    if(snapshot){
+        _videoPlayer.snapshotView.image = snapshot;
+    }
+    
+    _videoPlayer.snapshotView.hidden = NO;
+}
+
+- (void)willDisplay{
+    [super willDisplay];
+    
+    _videoPlayer.snapshotView.hidden = YES;
+}
+
 - (void)endDisplaying{
     [super endDisplaying];
     
-    [_videoPlayer pause];
+    [_videoPlayer stop];
     [_videoPlayer hideIndicator];
 }
 

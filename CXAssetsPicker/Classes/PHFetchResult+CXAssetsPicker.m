@@ -1,15 +1,15 @@
 //
-//  PHFetchResult+CXExtensions.m
+//  PHFetchResult+CXAssetsPicker.m
 //  Pods
 //
 //  Created by wshaolin on 2019/2/14.
 //
 
-#import "PHFetchResult+CXExtensions.h"
+#import "PHFetchResult+CXAssetsPicker.h"
 
 #import <objc/runtime.h>
 
-@implementation PHFetchResult (CXExtensions)
+@implementation PHFetchResult (CXAssetsPicker)
 
 - (void)setCx_mediaType:(CXAssetsType)cx_mediaType{
     objc_setAssociatedObject(self, @selector(cx_mediaType), @(cx_mediaType), OBJC_ASSOCIATION_RETAIN_NONATOMIC);

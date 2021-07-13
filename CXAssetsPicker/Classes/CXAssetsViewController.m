@@ -10,7 +10,7 @@
 #import "CXAssetsViewToolBar.h"
 #import "CXAssetsPickerCollectionView.h"
 #import "CXAssetsPreviewController.h"
-#import "PHFetchResult+CXExtensions.h"
+#import "PHFetchResult+CXAssetsPicker.h"
 
 @interface CXAssetsViewController ()<UICollectionViewDataSource, UICollectionViewDelegate, CXAssetsViewToolBarDelegate, CXAssetsPreviewControllerDelegate, CXAssetsCollectionViewCellDelegate>{
     CXAssetsPickerCollectionView *_collectionView;
@@ -41,7 +41,7 @@
         _toolBar.delegate = self;
         _toolBar.translucent = self.navigationBar.translucent;
         _toolBar.hidden = CXArrayIsEmpty(_assets);
-        _toolBar.hiddenPreviewItem = !self.pickerController.isEnablePreview;
+        _toolBar.hiddenPreviewOption = !self.pickerController.isEnablePreview;
         _toolBar.enableMaximumCount = self.pickerController.enableMaximumCount;
         _toolBar.selectedCount = self.delegate.selectedAssets.count;
         [self.view addSubview:_toolBar];

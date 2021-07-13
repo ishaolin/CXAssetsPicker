@@ -24,7 +24,8 @@
 
 @property (nonatomic, assign) NSInteger selectedCount;
 @property (nonatomic, assign) NSInteger enableMaximumCount;
-@property (nonatomic, assign, getter = isHiddenPreviewItem) BOOL hiddenPreviewItem;
+@property (nonatomic, assign, getter = isHiddenPreviewItem) BOOL hiddenPreviewOption;
+@property (nonatomic, assign, getter = isHiddenOriginalImageOption) BOOL hiddenOriginalImageOption;
 @property (nonatomic, assign, getter = isSelectedOriginalImage) BOOL selectedOriginalImage;
 @property (nonatomic, assign, getter = isTranslucent) BOOL translucent;
 

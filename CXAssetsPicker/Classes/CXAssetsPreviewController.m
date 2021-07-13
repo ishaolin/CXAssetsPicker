@@ -27,7 +27,7 @@
 - (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil{
     if(self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]){
         _toolBar = [[CXAssetsViewToolBar alloc] init];
-        _toolBar.hiddenPreviewItem = YES;
+        _toolBar.hiddenPreviewOption = YES;
         _toolBar.delegate = self;
         
         _actionButton = [CXAssetsToolBarButtonItem buttonWithType:UIButtonTypeCustom];
@@ -144,6 +144,7 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     PHAsset *asset = self.assets[indexPath.item];
+    _toolBar.hiddenOriginalImageOption = asset.mediaType != PHAssetMediaTypeImage;
     CXAssetsPreviewViewCell *cell = nil;
     if(asset.mediaType == PHAssetMediaTypeVideo){
         cell = [CXAssetsPreviewVideoCell cellWithCollectionView:collectionView forIndexPath:indexPath];
@@ -158,6 +159,12 @@
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
     return collectionView.bounds.size;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath{
+    if([cell isKindOfClass:[CXAssetsPreviewViewCell class]]){
+        [((CXAssetsPreviewViewCell *)cell) willDisplay];
+    }
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath{
@@ -185,6 +192,16 @@
     }else{
         _actionButton.barButtonItemTitle = nil;
     }
+}
+
+- (void)didClickBackBarButtonItem:(CXBarButtonItem *)backBarButtonItem{
+    [super didClickBackBarButtonItem:backBarButtonItem];
+    
+    [_collectionView.visibleCells enumerateObjectsUsingBlock:^(__kindof UICollectionViewCell * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if([obj isKindOfClass:[CXAssetsPreviewViewCell class]]){
+            [((CXAssetsPreviewViewCell *)obj) endDisplaying];
+        }
+    }];
 }
 
 @end

@@ -7,7 +7,7 @@
 
 #import "CXAssetsImageManager.h"
 #import <CXFoundation/CXFoundation.h>
-#import "PHAsset+CXExtensions.h"
+#import "PHAsset+CXAssetsPicker.h"
 #import "PHImageRequestOptions+CXAssetsPicker.h"
 
 @implementation CXAssetsImageManager

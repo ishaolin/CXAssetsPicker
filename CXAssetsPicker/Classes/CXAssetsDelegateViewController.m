@@ -1,12 +1,12 @@
 //
 //  CXAssetsDelegateViewController.m
-//  CXAssetsPicker
+//  Pods
 //
 //  Created by wshaolin on 2021/7/8.
 //
 
 #import "CXAssetsDelegateViewController.h"
-#import "PHAsset+CXExtensions.h"
+#import "PHAsset+CXAssetsPicker.h"
 
 @interface CXAssetsDelegateViewController () {
     NSMutableArray<PHAsset *> *_selectedAssets;

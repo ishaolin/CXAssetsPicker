@@ -1,5 +1,5 @@
 //
-//  CXAssetsPickerController.m
+//  PodsController.m
 //  Pods
 //
 //  Created by wshaolin on 15/7/9.

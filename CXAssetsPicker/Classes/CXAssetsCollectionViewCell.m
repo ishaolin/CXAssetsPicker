@@ -8,7 +8,7 @@
 #import "CXAssetsCollectionViewCell.h"
 #import "CXAssetsToolBarButtonItem.h"
 #import "CXAssetsPickerDefines.h"
-#import "PHAsset+CXExtensions.h"
+#import "PHAsset+CXAssetsPicker.h"
 #import "CXAssetsPickerAdapter.h"
 
 static UIColor *_selectedAssetBackgroundColor = nil;

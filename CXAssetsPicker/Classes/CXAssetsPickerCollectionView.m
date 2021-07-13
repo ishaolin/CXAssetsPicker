@@ -1,5 +1,5 @@
 //
-//  CXAssetsPickerCollectionView.m
+//  PodsCollectionView.m
 //  Pods
 //
 //  Created by wshaolin on 15/7/10.
