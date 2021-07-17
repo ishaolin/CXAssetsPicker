@@ -14,7 +14,7 @@
 @optional
 - (void)assetsViewToolBarDidCompleted:(CXAssetsViewToolBar *)toolBar;
 - (void)assetsViewToolBarDidPreviewed:(CXAssetsViewToolBar *)toolBar;
-- (void)assetsViewToolBar:(CXAssetsViewToolBar *)toolBar didSelectedOriginalImage:(BOOL)isSelected;;
+- (void)assetsViewToolBar:(CXAssetsViewToolBar *)toolBar didSelectedOriginalImage:(BOOL)isSelected;
 
 @end
 
