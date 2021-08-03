@@ -12,6 +12,6 @@
 
 @property (nonatomic, strong, readonly) NSArray<PHAsset *> *selectedAssets;
 
-- (void)pickerCancel:(BOOL)animated;
+- (void)cancelPicker:(BOOL)animated;
 
 @end

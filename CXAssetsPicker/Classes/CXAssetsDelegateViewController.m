@@ -26,7 +26,7 @@
     return _selectedAssets;
 }
 
-- (void)pickerCancel:(BOOL)animated{
+- (void)cancelPicker:(BOOL)animated{
     if([self.pickerController.delegate respondsToSelector:@selector(assetsPickerControllerDidCancel:)]){
         [self.pickerController.delegate assetsPickerControllerDidCancel:self.pickerController];
     }
@@ -35,7 +35,7 @@
 }
 
 - (void)assetsViewControllerDidCancel:(CXAssetsViewController *)viewController{
-    [self pickerCancel:YES];
+    [self cancelPicker:YES];
 }
 
 - (void)assetsViewControllerDidCompleted:(CXAssetsViewController *)viewController{

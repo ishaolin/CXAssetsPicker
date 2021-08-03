@@ -21,6 +21,6 @@
 
 @end
 
-UIKIT_EXTERN NSString * const CXWebImagePickerTypeCamera;
-UIKIT_EXTERN NSString * const CXWebImagePickerTypeAlbum;
-UIKIT_EXTERN NSString * const CXWebImagePickerTypeBothAll;
+CX_UIKIT_EXTERN NSString * const CXWebViewImagePickerTypeCamera;
+CX_UIKIT_EXTERN NSString * const CXWebViewImagePickerTypeAlbum;
+CX_UIKIT_EXTERN NSString * const CXWebViewImagePickerTypeBothAll;

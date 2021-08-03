@@ -16,6 +16,7 @@
     CXTableView *_tableView;
     CXAssetsAlbumNoDataView *_noDataView;
     NSMutableArray<PHFetchResult<PHAsset *> *> *_assetsAlbums;
+    PHAuthorizationStatus _authorizationStatus;
 }
 
 @end
@@ -77,23 +78,26 @@
 }
 
 - (void)didClickCancelBarButtonItem:(CXBarButtonItem *)barButtonItem{
-    [self pickerCancel:YES];
+    [self cancelPicker:YES];
 }
 
 - (void)assetsAlbumNoDataViewDidOpenAuthorization:(CXAssetsAlbumNoDataView *)view{
-    [CXAppUtils openSettingsPageWithCompletion:^(BOOL success) {
-        if(!success){
-            return;
-        }
-        
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.75 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [self pickerCancel:NO];
-        });
-    }];
+    [CXAppUtils openSettingsPage];
+}
+
+- (void)willEnterForegroundNotification:(NSNotification *)notification{
+    [super willEnterForegroundNotification:notification];
+    
+    if(_authorizationStatus != PHAuthorizationStatusNotDetermined &&
+       _authorizationStatus != PHAuthorizationStatusAuthorized){
+        [self loadAssetsAlbums];
+    }
 }
 
 - (void)loadAssetsAlbums{
     [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
+        _authorizationStatus = status;
+        
         [CXDispatchHandler asyncOnMainQueue:^{
             if(status == PHAuthorizationStatusNotDetermined || status == PHAuthorizationStatusAuthorized){
                 [self loadAssetsAlbumWithTypes:@[@(PHAssetCollectionTypeSmartAlbum), @(PHAssetCollectionTypeAlbum)]];

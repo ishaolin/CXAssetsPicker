@@ -31,9 +31,9 @@
 - (instancetype)initWithDictionary:(NSDictionary<NSString *, id> *)dictionary{
     CXImagePickerSourceType sourceType = CXImagePickerSourceTypeBothAll;
     NSString *type = [dictionary cx_stringForKey:@"type"];
-    if([type isEqualToString:CXWebImagePickerTypeCamera]){
+    if([type isEqualToString:CXWebViewImagePickerTypeCamera]){
         sourceType = CXImagePickerSourceTypeCamera;
-    }else if([type isEqualToString:CXWebImagePickerTypeAlbum]){
+    }else if([type isEqualToString:CXWebViewImagePickerTypeAlbum]){
         sourceType = CXImagePickerSourceTypeAlbum;
     }
     
@@ -54,13 +54,13 @@
         return NO;
     }
     
-    return ([type isEqualToString:CXWebImagePickerTypeCamera] ||
-            [type isEqualToString:CXWebImagePickerTypeAlbum] ||
-            [type isEqualToString:CXWebImagePickerTypeBothAll]);
+    return ([type isEqualToString:CXWebViewImagePickerTypeCamera] ||
+            [type isEqualToString:CXWebViewImagePickerTypeAlbum] ||
+            [type isEqualToString:CXWebViewImagePickerTypeBothAll]);
 }
 
 @end
 
-NSString * const CXWebImagePickerTypeCamera = @"camera";
-NSString * const CXWebImagePickerTypeAlbum = @"album";
-NSString * const CXWebImagePickerTypeBothAll = @"both";
+NSString * const CXWebViewImagePickerTypeCamera = @"camera";
+NSString * const CXWebViewImagePickerTypeAlbum = @"album";
+NSString * const CXWebViewImagePickerTypeBothAll = @"both";
